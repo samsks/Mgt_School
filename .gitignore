@@ -1,3 +1,16 @@
+#REACT APP
+
+node_modules
+DS_Store
+dist
+dist-ssr
+*.local
+
+
+
+
+#PYTHON APP
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
