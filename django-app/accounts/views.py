@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from rest_framework.views import APIView, Request, Response, status
+from .models import Account
 
-# Create your views here.
+
+class AccountView(APIView):
+    ...
