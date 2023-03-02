@@ -1,1 +1,1 @@
-# mgt_scholl_samsks
+# mgt_school_samsks
