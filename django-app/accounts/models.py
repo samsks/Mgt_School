@@ -1,10 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
-
-class OfficeOptions(models.TextChoices):
-    ACCOUNT_OWNER = 'Account_Owner'
-    TEACHER = 'Teacher'
+from utils.choice_classes import OfficeOptions
 
 
 class Account(AbstractUser):

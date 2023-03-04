@@ -9,6 +9,7 @@ import ipdb
 
 # Estado atual: Listando todas as contas abertamente
 # Filtrando apenas users ativos
+# last login not implemented
 class AccountView(generics.ListCreateAPIView):
 
     # def get_authenticators(self):
@@ -30,7 +31,7 @@ class AccountView(generics.ListCreateAPIView):
     serializer_class = AccountSerializer
 
 
-# Estado atual: Funcionando por dono ou admin 
+# Estado atual: Funcionando por dono ou admin
 # Excluindo normalmente, descomentar antes de subir
 class AccountDetailView(generics.RetrieveUpdateDestroyAPIView):
 

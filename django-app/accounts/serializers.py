@@ -4,15 +4,6 @@ from .models import Account, OfficeOptions
 from django.contrib.auth.hashers import make_password
 
 
-# Removi pois sem necessidade em account. Reaproveitar em outros choices
-
-# def choices_error_message(choices_class):
-#     valid_choices = [choice[0] for choice in choices_class.choices]
-#     message = ", ".join(valid_choices).rsplit(",", 1)
-
-#     return "Choose between " + " and".join(message) + "."
-
-
 class AccountSerializer(serializers.ModelSerializer):
 
     # def validate_password(self, value):
@@ -52,5 +43,4 @@ class AccountSerializer(serializers.ModelSerializer):
         read_only_fields = ['office', 'is_staff', 'is_active', 'date_joined', 'last_login', 'is_superuser']
         extra_kwargs = {
             "password": {"write_only": True},
-            # "office": {"error_messages": {"invalid_choice": choices_error_message(OfficeOptions)}},
         }

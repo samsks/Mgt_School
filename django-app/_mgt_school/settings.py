@@ -41,6 +41,7 @@ THIRD_PARTY_APPS = [
 MY_APPS = [
     "accounts",
     "schools",
+    "teachers",
 ]
 
 DJANGO_APPS = [

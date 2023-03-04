@@ -14,13 +14,13 @@ class SchoolView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsAccountOwnerOrAdmin]
 
+    # queryset = School.objects.all()
+    serializer_class = SchoolSerializer
+
     def get_queryset(self):
         if self.request.user.is_superuser:
             return School.objects.all()
         return School.objects.filter(account=self.request.user)
-
-    # queryset = School.objects.all()
-    serializer_class = SchoolSerializer
 
     def perform_create(self, serializer):
         serializer.save(account=self.request.user)
