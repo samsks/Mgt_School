@@ -8,7 +8,11 @@ class OfficeOptions(models.TextChoices):
 
 
 class Account(AbstractUser):
-    email = models.EmailField(max_length=127, unique=True, error_messages={"unique": "This field must be unique."})
+    email = models.EmailField(
+        max_length=127,
+        unique=True,
+        error_messages={"unique": "This field must be unique."}
+    )
     full_name = models.CharField(max_length=255)
     birthdate = models.DateField()
     cpf = models.IntegerField()

@@ -1,8 +1,11 @@
 from rest_framework import serializers
 from .models import Account, OfficeOptions
 
+from django.contrib.auth.hashers import make_password
+
 
 # Removi pois sem necessidade em account. Reaproveitar em outros choices
+
 # def choices_error_message(choices_class):
 #     valid_choices = [choice[0] for choice in choices_class.choices]
 #     message = ", ".join(valid_choices).rsplit(",", 1)
@@ -11,6 +14,9 @@ from .models import Account, OfficeOptions
 
 
 class AccountSerializer(serializers.ModelSerializer):
+
+    # def validate_password(self, value):
+    #     return make_password(value)
 
     def create(self, validated_data: dict) -> Account:
         return Account.objects.create_user(**validated_data)
@@ -30,6 +36,7 @@ class AccountSerializer(serializers.ModelSerializer):
         model = Account
         fields = [
             'id',
+            'password',
             'username',
             'email',
             'full_name',
