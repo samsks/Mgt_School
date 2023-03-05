@@ -10,3 +10,10 @@ class GenderOptions(models.TextChoices):
     MALE = 'Male'
     FEMALE = 'Female'
     NOT_INFORMED = 'Not Informed'
+
+
+class PeriodOptions(models.TextChoices):
+    MORNING = 'Morning'
+    AFTERNOON = 'Afternoon'
+    NIGHT = 'Night'
+    NOT_INFORMED = 'Not Informed'

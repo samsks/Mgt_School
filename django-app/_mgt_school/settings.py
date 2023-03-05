@@ -42,6 +42,11 @@ MY_APPS = [
     "accounts",
     "schools",
     "teachers",
+    "students",
+    "courses",
+    "classes",
+    # "classrooms",
+    # "classrooms_tests",
 ]
 
 DJANGO_APPS = [
