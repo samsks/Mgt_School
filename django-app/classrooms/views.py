@@ -1,36 +1,39 @@
 from rest_framework import generics
-from .models import Class
-from .serializers import ClassSerializer
+from .models import Classroom
+from .serializers import ClassroomSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from schools.permissions import IsAdminOrSchoolOwner
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
+from classes.models import Class
 from courses.models import Course
-from teachers.models import Teacher
 from schools.models import School
 from schools.mixins import SchoolPermissionMixin
 from rest_framework.exceptions import NotFound
 
 
 # Voltar aqui quando conf app classes
-class ClassView(SchoolPermissionMixin, generics.ListCreateAPIView):
+class ClassroomView(SchoolPermissionMixin, generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner]
 
-    # queryset = Class.objects.all()
-    serializer_class = ClassSerializer
+    # queryset = Classroom.objects.all()
+    serializer_class = ClassroomSerializer
 
     school_url_kwarg = 'school_id'
 
     def get_queryset(self):
         school_id = self.kwargs[self.school_url_kwarg]
-        return Class.objects.filter(course__school_id=school_id)
+        course_id = self.request.data.get('course_id')
+        return Classroom.objects.filter(
+            _class__course__school_id=school_id,
+            # _class__course_id=course_id,
+        )
 
     def perform_create(self, serializer):
 
         school_id = self.kwargs[self.school_url_kwarg]
         course_id = self.request.data.get('course_id')
-        teacher_id = self.request.data.get('teacher_id')
+        class_id = self.request.data.get('class_id')
 
         find_school = School.objects.filter(pk=school_id).first()
         if not find_school:
@@ -43,17 +46,16 @@ class ClassView(SchoolPermissionMixin, generics.ListCreateAPIView):
         if not find_course:
             raise NotFound("Course not found")
 
-        if teacher_id:
-            find_teacher = Teacher.objects.filter(
-                pk=teacher_id,
-                school_id=school_id
-            ).first()
-            if not find_teacher:
-                raise NotFound("Teacher not found")
-            serializer.save(course_id=course_id, teacher_id=teacher_id,)
+        find_class = Class.objects.filter(
+            pk=class_id,
+            course=course_id,
+            course__school_id=school_id
+        ).first()
+        if not find_class:
+            raise NotFound("Class not found")
 
-        serializer.save(course_id=course_id,)
+        serializer.save(_class_id=class_id,)
 
 
-class ClassDetailView(generics.RetrieveUpdateDestroyAPIView):
+class ClassroomDetailView(generics.RetrieveUpdateDestroyAPIView):
     ...

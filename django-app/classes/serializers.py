@@ -19,7 +19,7 @@ class ClassSerializer(serializers.ModelSerializer):
             'course_id',
             'teacher_id',
         ]
-        read_only_fields = ['course_id', 'school_id']
+        read_only_fields = []
         extra_kwargs = {
             "period": {"error_messages": {"invalid_choice": choices_error_message(PeriodOptions)}},
         }

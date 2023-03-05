@@ -17,3 +17,12 @@ class PeriodOptions(models.TextChoices):
     AFTERNOON = 'Afternoon'
     NIGHT = 'Night'
     NOT_INFORMED = 'Not Informed'
+
+
+class CategoryOptions(models.TextChoices):
+    FSTQUARTER = '1st Quarter'
+    SNDQUARTER = '2nd Quarter'
+    TRDQUARTER = '3rd Quarter'
+    FTHQUARTER = '4th Quarter'
+    FSTRECOVERY = '1st Recovery'
+    SNDRECOVERY = '2nd Recovery'

@@ -45,7 +45,7 @@ MY_APPS = [
     "students",
     "courses",
     "classes",
-    # "classrooms",
+    "classrooms",
     # "classrooms_tests",
 ]
 
