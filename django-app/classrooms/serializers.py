@@ -17,7 +17,7 @@ class ClassroomSerializer(serializers.ModelSerializer):
             'course_id',
         ]
         extra_kwargs = {
-            'class_id': {'source': '_class_id'},
+            'class_id': {'source': 'cclass_id'},
             # 'course_id': {"write_only": True},
         }
 

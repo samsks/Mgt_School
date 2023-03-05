@@ -5,6 +5,7 @@ from students.views import StudentView, StudentDetailView
 from courses.views import CourseView, CourseDetailView
 from classes.views import ClassView, ClassDetailView
 from classrooms.views import ClassroomView, ClassroomDetailView
+from ttests.views import TestView, TestDetailView
 
 
 urlpatterns = [
@@ -20,4 +21,6 @@ urlpatterns = [
     path("schools/<int:school_id>/courses/classes/<int:class_id>", ClassDetailView.as_view()),
     path("schools/<int:school_id>/courses/classes/classrooms/", ClassroomView.as_view()),
     path("schools/<int:school_id>/courses/classes/<int:class_id>/classrooms/<int:classroom_id>", ClassroomDetailView.as_view()),
+    path("schools/<int:school_id>/courses/classes/classrooms/tests/", TestView.as_view()),
+    path("schools/<int:school_id>/courses/classes/classrooms/tests/<int:test_id>", TestDetailView.as_view()),
 ]

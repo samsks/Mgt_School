@@ -19,7 +19,7 @@ class PeriodOptions(models.TextChoices):
     NOT_INFORMED = 'Not Informed'
 
 
-class CategoryOptions(models.TextChoices):
+class CategoryTestOptions(models.TextChoices):
     FSTQUARTER = '1st Quarter'
     SNDQUARTER = '2nd Quarter'
     TRDQUARTER = '3rd Quarter'

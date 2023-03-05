@@ -37,3 +37,10 @@ class Student(models.Model):
         on_delete=models.CASCADE,
         related_name='students',
     )
+
+    # class = models.ForeignKey(
+    #     'teachers.Teacher',
+    #     on_delete=models.SET_NULL,
+    #     null=True,
+    #     related_name='classes',
+    # )
