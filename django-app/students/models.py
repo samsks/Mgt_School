@@ -2,6 +2,9 @@ from django.db import models
 from utils.choice_classes import GenderOptions
 import random
 from datetime import datetime
+from classes.models import Class
+from ttests.models import Test
+from classrooms.models import Classroom
 
 
 def generate_register_number():
@@ -38,9 +41,43 @@ class Student(models.Model):
         related_name='students',
     )
 
-    # class = models.ForeignKey(
-    #     'teachers.Teacher',
-    #     on_delete=models.SET_NULL,
-    #     null=True,
-    #     related_name='classes',
-    # )
+    classes = models.ManyToManyField(
+        Class,
+        through="Class_Registration",
+        related_name="students"
+    )
+
+    ttests = models.ManyToManyField(
+        Test,
+        through="Test_Result",
+        related_name="students"
+    )
+
+    classrooms = models.ManyToManyField(
+        Classroom,
+        through="Attendance",
+        related_name="students"
+    )
+
+
+class Class_Registration(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    cclass = models.ForeignKey(Class, on_delete=models.CASCADE)
+
+    registered_at = models.DateField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+
+class Test_Result(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+
+    test_grade = models.DecimalField(max_digits=12, decimal_places=2)
+
+
+class Attendance(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+
+    showed_up = models.BooleanField(default=False)
+    register_date = models.DateTimeField(auto_now_add=True)
