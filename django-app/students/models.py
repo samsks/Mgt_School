@@ -43,13 +43,13 @@ class Student(models.Model):
 
     classes = models.ManyToManyField(
         Class,
-        through="Class_Registration",
+        through="ClassRegistration",
         related_name="students"
     )
 
     ttests = models.ManyToManyField(
         Test,
-        through="Test_Result",
+        through="TestResult",
         related_name="students"
     )
 
@@ -60,19 +60,25 @@ class Student(models.Model):
     )
 
 
-class Class_Registration(models.Model):
+class ClassRegistration(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     cclass = models.ForeignKey(Class, on_delete=models.CASCADE)
 
     registered_at = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
+    class Meta:
+        db_table = 'students_class_registration'
 
-class Test_Result(models.Model):
+
+class TestResult(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
 
     test_grade = models.DecimalField(max_digits=12, decimal_places=2)
+
+    class Meta:
+        db_table = 'students_test_result'
 
 
 class Attendance(models.Model):
@@ -80,4 +86,4 @@ class Attendance(models.Model):
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
 
     showed_up = models.BooleanField(default=False)
-    register_date = models.DateTimeField(auto_now_add=True)
+    register_date = models.DateTimeField(auto_now=True)
