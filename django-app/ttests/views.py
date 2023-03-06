@@ -66,4 +66,10 @@ class TestView(SchoolPermissionMixin, generics.ListCreateAPIView):
 
 
 class TestDetailView(generics.RetrieveUpdateDestroyAPIView):
-    ...
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner,]
+
+    queryset = Test.objects.all()
+    serializer_class = TestSerializer
+
+    lookup_url_kwarg = "test_id"

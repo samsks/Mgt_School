@@ -86,4 +86,4 @@ class Attendance(models.Model):
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
 
     showed_up = models.BooleanField(default=False)
-    register_date = models.DateTimeField(auto_now=True)
+    register_date = models.DateTimeField(auto_now_add=True)

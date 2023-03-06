@@ -29,4 +29,10 @@ class CourseView(SchoolPermissionMixin, generics.ListCreateAPIView):
 
 
 class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
-    ...
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner,]
+
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+
+    lookup_url_kwarg = "course_id"

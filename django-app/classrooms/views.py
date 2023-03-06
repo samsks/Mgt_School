@@ -57,4 +57,10 @@ class ClassroomView(SchoolPermissionMixin, generics.ListCreateAPIView):
 
 
 class ClassroomDetailView(generics.RetrieveUpdateDestroyAPIView):
-    ...
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner,]
+
+    queryset = Classroom.objects.all()
+    serializer_class = ClassroomSerializer
+
+    lookup_url_kwarg = "classroom_id"

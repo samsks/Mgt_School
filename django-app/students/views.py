@@ -34,7 +34,13 @@ class StudentView(SchoolPermissionMixin, generics.ListCreateAPIView):
 
 
 class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
-    ...
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner,]
+
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    lookup_url_kwarg = "student_id"
 
 
 class ClassRegistrationView(SchoolPermissionMixin, generics.ListCreateAPIView):
@@ -76,8 +82,14 @@ class ClassRegistrationView(SchoolPermissionMixin, generics.ListCreateAPIView):
         serializer.save(student_id=student_id, cclass_id=class_id)
 
 
-class ClassRegistrationDetailView(SchoolPermissionMixin, generics.ListCreateAPIView):
-    ...
+class ClassRegistrationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner,]
+
+    queryset = ClassRegistration.objects.all()
+    serializer_class = ClassRegistrationSerializer
+
+    lookup_url_kwarg = "cls_register_id"
 
 
 class TestResultView(SchoolPermissionMixin, generics.ListCreateAPIView):
@@ -119,8 +131,14 @@ class TestResultView(SchoolPermissionMixin, generics.ListCreateAPIView):
         serializer.save(student_id=student_id, test_id=test_id)
 
 
-class TestResultDetailView(SchoolPermissionMixin, generics.ListCreateAPIView):
-    ...
+class TestResultDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner,]
+
+    queryset = TestResult.objects.all()
+    serializer_class = TestResultSerializer
+
+    lookup_url_kwarg = "test_result_id"
 
 
 class AttendanceView(SchoolPermissionMixin, generics.ListCreateAPIView):
@@ -171,5 +189,11 @@ class AttendanceView(SchoolPermissionMixin, generics.ListCreateAPIView):
         serializer.save(student_id=student_id, classroom_id=classroom_id)
 
 
-class AttendanceDetailView(SchoolPermissionMixin, generics.ListCreateAPIView):
-    ...
+class AttendanceDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner,]
+
+    queryset = Attendance.objects.all()
+    serializer_class = AttendanceSerializer
+
+    lookup_url_kwarg = "attendance_id"

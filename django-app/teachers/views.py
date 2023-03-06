@@ -28,4 +28,20 @@ class TeacherView(SchoolPermissionMixin, generics.ListCreateAPIView):
 
 
 class TeacherDetailView(generics.RetrieveUpdateDestroyAPIView):
-    ...
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner,]
+
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
+
+    lookup_url_kwarg = "teacher_id"
+
+    # def partial_update(self, request, *args, **kwargs):
+    #     import ipdb
+    #     ipdb.set_trace()
+
+    #     return super().partial_update(request, *args, **kwargs)
+
+    # def get_queryset(self):
+    #     teacher_id = self.kwargs[self.lookup_url_kwarg]
+    #     return Teacher.objects.filter(pk=teacher_id)
