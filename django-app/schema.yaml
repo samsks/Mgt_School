@@ -1,0 +1,2894 @@
+openapi: 3.0.3
+info:
+  title: MGT School
+  version: 1.0.0
+  description: Gerenciador escolar
+paths:
+  /api/accounts/:
+    get:
+      operationId: api_accounts_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAccountList'
+          description: ''
+    post:
+      operationId: api_accounts_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Account'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Account'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+          description: ''
+  /api/accounts/{account_id}:
+    get:
+      operationId: api_accounts_retrieve
+      parameters:
+      - in: path
+        name: account_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+          description: ''
+    put:
+      operationId: api_accounts_update
+      parameters:
+      - in: path
+        name: account_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Account'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Account'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+          description: ''
+    patch:
+      operationId: api_accounts_partial_update
+      parameters:
+      - in: path
+        name: account_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAccount'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAccount'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAccount'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+          description: ''
+    delete:
+      operationId: api_accounts_destroy
+      parameters:
+      - in: path
+        name: account_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/login/:
+    post:
+      operationId: api_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/refresh/:
+    post:
+      operationId: api_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/schools/:
+    get:
+      operationId: api_schools_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSchoolList'
+          description: ''
+    post:
+      operationId: api_schools_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/School'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/School'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/School'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+          description: ''
+  /api/schools/{school_id}:
+    get:
+      operationId: api_schools_retrieve
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+          description: ''
+    put:
+      operationId: api_schools_update
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/School'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/School'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/School'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+          description: ''
+    patch:
+      operationId: api_schools_partial_update
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSchool'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSchool'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSchool'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+          description: ''
+    delete:
+      operationId: api_schools_destroy
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/schools/{school_id}/attendance/:
+    get:
+      operationId: api_schools_attendance_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAttendanceList'
+          description: ''
+    post:
+      operationId: api_schools_attendance_create
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Attendance'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Attendance'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Attendance'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendance'
+          description: ''
+  /api/schools/{school_id}/attendance/{attendance_id}:
+    get:
+      operationId: api_schools_attendance_retrieve
+      parameters:
+      - in: path
+        name: attendance_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendance'
+          description: ''
+    put:
+      operationId: api_schools_attendance_update
+      parameters:
+      - in: path
+        name: attendance_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Attendance'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Attendance'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Attendance'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendance'
+          description: ''
+    patch:
+      operationId: api_schools_attendance_partial_update
+      parameters:
+      - in: path
+        name: attendance_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAttendance'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAttendance'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAttendance'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendance'
+          description: ''
+    delete:
+      operationId: api_schools_attendance_destroy
+      parameters:
+      - in: path
+        name: attendance_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/schools/{school_id}/class_registrations/:
+    get:
+      operationId: api_schools_class_registrations_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClassRegistrationList'
+          description: ''
+    post:
+      operationId: api_schools_class_registrations_create
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassRegistration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassRegistration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassRegistration'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassRegistration'
+          description: ''
+  /api/schools/{school_id}/class_registrations/{cls_register_id}:
+    get:
+      operationId: api_schools_class_registrations_retrieve
+      parameters:
+      - in: path
+        name: cls_register_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassRegistration'
+          description: ''
+    put:
+      operationId: api_schools_class_registrations_update
+      parameters:
+      - in: path
+        name: cls_register_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassRegistration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassRegistration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassRegistration'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassRegistration'
+          description: ''
+    patch:
+      operationId: api_schools_class_registrations_partial_update
+      parameters:
+      - in: path
+        name: cls_register_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClassRegistration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClassRegistration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClassRegistration'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassRegistration'
+          description: ''
+    delete:
+      operationId: api_schools_class_registrations_destroy
+      parameters:
+      - in: path
+        name: cls_register_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/schools/{school_id}/courses/:
+    get:
+      operationId: api_schools_courses_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCourseList'
+          description: ''
+    post:
+      operationId: api_schools_courses_create
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Course'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Course'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+  /api/schools/{school_id}/courses/{course_id}:
+    get:
+      operationId: api_schools_courses_retrieve
+      parameters:
+      - in: path
+        name: course_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+    put:
+      operationId: api_schools_courses_update
+      parameters:
+      - in: path
+        name: course_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Course'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Course'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+    patch:
+      operationId: api_schools_courses_partial_update
+      parameters:
+      - in: path
+        name: course_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCourse'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCourse'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCourse'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+    delete:
+      operationId: api_schools_courses_destroy
+      parameters:
+      - in: path
+        name: course_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/schools/{school_id}/courses/classes/:
+    get:
+      operationId: api_schools_courses_classes_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClassList'
+          description: ''
+    post:
+      operationId: api_schools_courses_classes_create
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Class'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Class'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Class'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+          description: ''
+  /api/schools/{school_id}/courses/classes/{class_id}:
+    get:
+      operationId: api_schools_courses_classes_retrieve
+      parameters:
+      - in: path
+        name: class_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+          description: ''
+    put:
+      operationId: api_schools_courses_classes_update
+      parameters:
+      - in: path
+        name: class_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Class'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Class'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Class'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+          description: ''
+    patch:
+      operationId: api_schools_courses_classes_partial_update
+      parameters:
+      - in: path
+        name: class_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClass'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClass'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClass'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+          description: ''
+    delete:
+      operationId: api_schools_courses_classes_destroy
+      parameters:
+      - in: path
+        name: class_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/schools/{school_id}/courses/classes/classrooms/:
+    get:
+      operationId: api_schools_courses_classes_classrooms_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClassroomList'
+          description: ''
+    post:
+      operationId: api_schools_courses_classes_classrooms_create
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classroom'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Classroom'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Classroom'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classroom'
+          description: ''
+  /api/schools/{school_id}/courses/classes/classrooms/{classroom_id}:
+    get:
+      operationId: api_schools_courses_classes_classrooms_retrieve
+      parameters:
+      - in: path
+        name: classroom_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classroom'
+          description: ''
+    put:
+      operationId: api_schools_courses_classes_classrooms_update
+      parameters:
+      - in: path
+        name: classroom_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classroom'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Classroom'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Classroom'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classroom'
+          description: ''
+    patch:
+      operationId: api_schools_courses_classes_classrooms_partial_update
+      parameters:
+      - in: path
+        name: classroom_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClassroom'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClassroom'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClassroom'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classroom'
+          description: ''
+    delete:
+      operationId: api_schools_courses_classes_classrooms_destroy
+      parameters:
+      - in: path
+        name: classroom_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/schools/{school_id}/courses/classes/classrooms/tests/:
+    get:
+      operationId: api_schools_courses_classes_classrooms_tests_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTestList'
+          description: ''
+    post:
+      operationId: api_schools_courses_classes_classrooms_tests_create
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Test'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Test'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Test'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Test'
+          description: ''
+  /api/schools/{school_id}/courses/classes/classrooms/tests/{test_id}:
+    get:
+      operationId: api_schools_courses_classes_classrooms_tests_retrieve
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: test_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Test'
+          description: ''
+    put:
+      operationId: api_schools_courses_classes_classrooms_tests_update
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: test_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Test'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Test'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Test'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Test'
+          description: ''
+    patch:
+      operationId: api_schools_courses_classes_classrooms_tests_partial_update
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: test_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Test'
+          description: ''
+    delete:
+      operationId: api_schools_courses_classes_classrooms_tests_destroy
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: test_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/schools/{school_id}/students/:
+    get:
+      operationId: api_schools_students_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedStudentList'
+          description: ''
+    post:
+      operationId: api_schools_students_create
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Student'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Student'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+  /api/schools/{school_id}/students/{student_id}:
+    get:
+      operationId: api_schools_students_retrieve
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: student_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+    put:
+      operationId: api_schools_students_update
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: student_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Student'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Student'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+    patch:
+      operationId: api_schools_students_partial_update
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: student_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedStudent'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedStudent'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedStudent'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+    delete:
+      operationId: api_schools_students_destroy
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: student_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/schools/{school_id}/teachers/:
+    get:
+      operationId: api_schools_teachers_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTeacherList'
+          description: ''
+    post:
+      operationId: api_schools_teachers_create
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+          description: ''
+  /api/schools/{school_id}/teachers/{teacher_id}:
+    get:
+      operationId: api_schools_teachers_retrieve
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: teacher_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+          description: ''
+    put:
+      operationId: api_schools_teachers_update
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: teacher_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+          description: ''
+    patch:
+      operationId: api_schools_teachers_partial_update
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: teacher_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTeacher'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTeacher'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTeacher'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+          description: ''
+    delete:
+      operationId: api_schools_teachers_destroy
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: teacher_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/schools/{school_id}/test_results/:
+    get:
+      operationId: api_schools_test_results_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTestResultList'
+          description: ''
+    post:
+      operationId: api_schools_test_results_create
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestResult'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TestResult'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TestResult'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestResult'
+          description: ''
+  /api/schools/{school_id}/test_results/{test_result_id}:
+    get:
+      operationId: api_schools_test_results_retrieve
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: test_result_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestResult'
+          description: ''
+    put:
+      operationId: api_schools_test_results_update
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: test_result_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestResult'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TestResult'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TestResult'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestResult'
+          description: ''
+    patch:
+      operationId: api_schools_test_results_partial_update
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: test_result_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTestResult'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTestResult'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTestResult'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestResult'
+          description: ''
+    delete:
+      operationId: api_schools_test_results_destroy
+      parameters:
+      - in: path
+        name: school_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: test_result_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 127
+        full_name:
+          type: string
+          maxLength: 255
+        cpf:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        birthdate:
+          type: string
+          format: date
+        phone:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        office:
+          allOf:
+          - $ref: '#/components/schemas/OfficeEnum'
+          readOnly: true
+        is_staff:
+          type: boolean
+          readOnly: true
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_active:
+          type: boolean
+          readOnly: true
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - birthdate
+      - cpf
+      - date_joined
+      - email
+      - full_name
+      - id
+      - is_active
+      - is_staff
+      - last_login
+      - office
+      - password
+      - phone
+      - username
+    Attendance:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        showed_up:
+          type: boolean
+        register_date:
+          type: string
+          format: date-time
+          readOnly: true
+        classroom_id:
+          type: integer
+          readOnly: true
+        student_id:
+          type: integer
+          readOnly: true
+      required:
+      - classroom_id
+      - id
+      - register_date
+      - student_id
+    CategoryEnum:
+      enum:
+      - 1st Quarter
+      - 2nd Quarter
+      - 3rd Quarter
+      - 4th Quarter
+      - 1st Recovery
+      - 2nd Recovery
+      type: string
+    Class:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          nullable: true
+        duration:
+          type: string
+          nullable: true
+          maxLength: 20
+        period:
+          $ref: '#/components/schemas/PeriodEnum'
+        hour:
+          type: string
+          format: time
+        course_id:
+          type: integer
+          readOnly: true
+        teacher_id:
+          type: integer
+          nullable: true
+          readOnly: true
+      required:
+      - course_id
+      - hour
+      - id
+      - name
+      - teacher_id
+    ClassRegistration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        registered_at:
+          type: string
+          format: date
+          readOnly: true
+        is_active:
+          type: boolean
+        student_id:
+          type: integer
+          readOnly: true
+        class_id:
+          type: integer
+          readOnly: true
+      required:
+      - class_id
+      - id
+      - registered_at
+      - student_id
+    Classroom:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        matter_name:
+          type: string
+          maxLength: 50
+        weekdays:
+          type: string
+          maxLength: 13
+        class_id:
+          type: integer
+          readOnly: true
+      required:
+      - class_id
+      - id
+      - matter_name
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          nullable: true
+        duration:
+          type: string
+          maxLength: 20
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        school_id:
+          type: integer
+          readOnly: true
+      required:
+      - duration
+      - id
+      - name
+      - school_id
+      - start_date
+    GenderEnum:
+      enum:
+      - Male
+      - Female
+      - Not Informed
+      type: string
+    OfficeEnum:
+      enum:
+      - Account_Owner
+      - Teacher
+      type: string
+    PaginatedAccountList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+    PaginatedAttendanceList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attendance'
+    PaginatedClassList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Class'
+    PaginatedClassRegistrationList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassRegistration'
+    PaginatedClassroomList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Classroom'
+    PaginatedCourseList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Course'
+    PaginatedSchoolList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/School'
+    PaginatedStudentList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+    PaginatedTeacherList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Teacher'
+    PaginatedTestList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Test'
+    PaginatedTestResultList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestResult'
+    PatchedAccount:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 127
+        full_name:
+          type: string
+          maxLength: 255
+        cpf:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        birthdate:
+          type: string
+          format: date
+        phone:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        office:
+          allOf:
+          - $ref: '#/components/schemas/OfficeEnum'
+          readOnly: true
+        is_staff:
+          type: boolean
+          readOnly: true
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_active:
+          type: boolean
+          readOnly: true
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+    PatchedAttendance:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        showed_up:
+          type: boolean
+        register_date:
+          type: string
+          format: date-time
+          readOnly: true
+        classroom_id:
+          type: integer
+          readOnly: true
+        student_id:
+          type: integer
+          readOnly: true
+    PatchedClass:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          nullable: true
+        duration:
+          type: string
+          nullable: true
+          maxLength: 20
+        period:
+          $ref: '#/components/schemas/PeriodEnum'
+        hour:
+          type: string
+          format: time
+        course_id:
+          type: integer
+          readOnly: true
+        teacher_id:
+          type: integer
+          nullable: true
+          readOnly: true
+    PatchedClassRegistration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        registered_at:
+          type: string
+          format: date
+          readOnly: true
+        is_active:
+          type: boolean
+        student_id:
+          type: integer
+          readOnly: true
+        class_id:
+          type: integer
+          readOnly: true
+    PatchedClassroom:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        matter_name:
+          type: string
+          maxLength: 50
+        weekdays:
+          type: string
+          maxLength: 13
+        class_id:
+          type: integer
+          readOnly: true
+    PatchedCourse:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          nullable: true
+        duration:
+          type: string
+          maxLength: 20
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        school_id:
+          type: integer
+          readOnly: true
+    PatchedSchool:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        company_name:
+          type: string
+          maxLength: 127
+        cnpj:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        school_phone:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        account_id:
+          type: integer
+          readOnly: true
+    PatchedStudent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          maxLength: 255
+        cpf:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        birthdate:
+          type: string
+          format: date
+        phone:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        email:
+          type: string
+          format: email
+          maxLength: 127
+        photo:
+          type: string
+          nullable: true
+          maxLength: 255
+        register_number:
+          type: string
+          readOnly: true
+        is_active:
+          type: boolean
+        registered_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        school_id:
+          type: integer
+          readOnly: true
+    PatchedTeacher:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          maxLength: 255
+        cpf:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        birthdate:
+          type: string
+          format: date
+        phone:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        email:
+          type: string
+          format: email
+          maxLength: 127
+        photo:
+          type: string
+          nullable: true
+          maxLength: 255
+        is_active:
+          type: boolean
+        registered_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        fired_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        school_id:
+          type: integer
+          readOnly: true
+    PatchedTest:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        test_date:
+          type: string
+          format: date-time
+        max_score:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        classroom_id:
+          type: integer
+          readOnly: true
+    PatchedTestResult:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        test_grade:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        student_id:
+          type: integer
+          readOnly: true
+        test_id:
+          type: integer
+          readOnly: true
+    PeriodEnum:
+      enum:
+      - Morning
+      - Afternoon
+      - Night
+      - Not Informed
+      type: string
+    School:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        company_name:
+          type: string
+          maxLength: 127
+        cnpj:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        school_phone:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        account_id:
+          type: integer
+          readOnly: true
+      required:
+      - account_id
+      - cnpj
+      - company_name
+      - id
+      - school_phone
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          maxLength: 255
+        cpf:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        birthdate:
+          type: string
+          format: date
+        phone:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        email:
+          type: string
+          format: email
+          maxLength: 127
+        photo:
+          type: string
+          nullable: true
+          maxLength: 255
+        register_number:
+          type: string
+          readOnly: true
+        is_active:
+          type: boolean
+        registered_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        school_id:
+          type: integer
+          readOnly: true
+      required:
+      - birthdate
+      - cpf
+      - email
+      - full_name
+      - id
+      - phone
+      - register_number
+      - registered_at
+      - school_id
+      - updated_at
+    Teacher:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          maxLength: 255
+        cpf:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        birthdate:
+          type: string
+          format: date
+        phone:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        email:
+          type: string
+          format: email
+          maxLength: 127
+        photo:
+          type: string
+          nullable: true
+          maxLength: 255
+        is_active:
+          type: boolean
+        registered_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        fired_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        school_id:
+          type: integer
+          readOnly: true
+      required:
+      - birthdate
+      - cpf
+      - email
+      - fired_at
+      - full_name
+      - id
+      - phone
+      - registered_at
+      - school_id
+      - updated_at
+    Test:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        test_date:
+          type: string
+          format: date-time
+        max_score:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        classroom_id:
+          type: integer
+          readOnly: true
+      required:
+      - category
+      - classroom_id
+      - id
+      - test_date
+    TestResult:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        test_grade:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        student_id:
+          type: integer
+          readOnly: true
+        test_id:
+          type: integer
+          readOnly: true
+      required:
+      - id
+      - student_id
+      - test_grade
+      - test_id
+    TokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - email
+      - password
+      - refresh
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
