@@ -90,8 +90,8 @@ Este comando desativará o ambiente virtual e retornará ao ambiente global do P
 - Acesse `https://web-production-1b55.up.railway.app/admin/` para acessar com superuser.
 - Acesse `https://web-production-1b55.up.railway.app/api/account/` para acessar as requisições. Trocar o endpoint conforme documentação para acessar as rotas.
 - Acesse `https://web-production-1b55.up.railway.app/api/docs/swagger-ui/` para visualizar a documentação com estilo SWAGGER.
-- Acesse `https://web-production-1b55.up.railway.app0/api/docs/redoc/` para visualizar a documentação com estilo REDOC.
+- Acesse `https://web-production-1b55.up.railway.app/api/docs/redoc/` para visualizar a documentação com estilo REDOC.
 
 ## Licença
 
-Este projeto está licenciado sob a Licença All Rights Reserved - veja o arquivo [LICENSE](../LICENSE.md) para mais detalhes.
+Este projeto está licenciado sob a Licença All Rights Reserved - veja o arquivo [LICENSE](LICENSE.md) para mais detalhes.
