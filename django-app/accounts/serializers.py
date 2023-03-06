@@ -6,9 +6,6 @@ from django.contrib.auth.hashers import make_password
 
 class AccountSerializer(serializers.ModelSerializer):
 
-    # def validate_password(self, value):
-    #     return make_password(value)
-
     def create(self, validated_data: dict) -> Account:
         return Account.objects.create_user(**validated_data)
 

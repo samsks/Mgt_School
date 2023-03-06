@@ -7,14 +7,11 @@ from .permissions import IsAdminOrSchoolOwner
 from rest_framework.permissions import IsAuthenticated
 
 
-# Ambas rotas funcionando com as permissões esperadas
-# No momento de criação, apenas se criam escolas para a conta que está autenticada.
 class SchoolView(generics.ListCreateAPIView):
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsAccountOwnerOrAdmin]
 
-    # queryset = School.objects.all()
     serializer_class = SchoolSerializer
 
     def get_queryset(self):

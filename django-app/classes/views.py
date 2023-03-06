@@ -12,12 +12,10 @@ from schools.mixins import SchoolPermissionMixin
 from rest_framework.exceptions import NotFound
 
 
-# Voltar aqui quando conf app classes
 class ClassView(SchoolPermissionMixin, generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner]
 
-    # queryset = Class.objects.all()
     serializer_class = ClassSerializer
 
     school_url_kwarg = 'school_id'
