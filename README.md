@@ -12,4 +12,4 @@ Veja as instruções de instalação e uso da aplicação React em [react-app/RE
 
 ## Licença
 
-Este projeto está licenciado sob a Licença All Rights Reserved - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto está licenciado sob a Licença All Rights Reserved - veja o arquivo [LICENSE](LICENSE.md) para mais detalhes.
