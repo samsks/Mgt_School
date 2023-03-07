@@ -14,6 +14,8 @@ from pathlib import Path
 from datetime import timedelta
 import os
 import dotenv
+from django.core.management.utils import get_random_secret_key
+import dj_database_url
 
 dotenv.load_dotenv()
 
@@ -25,21 +27,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["mgtschoolsamsks-production.up.railway.app", "0.0.0.0"]
 
 
 # Application definition
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "drf_spectacular",
 ]
 
 MY_APPS = [
     "accounts",
+    "schools",
+    "teachers",
+    "students",
+    "courses",
+    "classes",
+    "classrooms",
+    "ttests",
 ]
 
 DJANGO_APPS = [
@@ -56,6 +66,7 @@ INSTALLED_APPS = THIRD_PARTY_APPS + MY_APPS + DJANGO_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -97,12 +108,17 @@ DATABASES = {
         "HOST": os.getenv('POSTGRES_DB_HOST'),
         "PORT": os.getenv('POSTGRES_PORT'),
     },
-    # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR / "db.sqlite3",
-    # }
 }
 
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
+    production_db = dj_database_url.config(default=DATABASE_URL)
+    DATABASES["default"].update(production_db)
+    DEBUG = False
+
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
