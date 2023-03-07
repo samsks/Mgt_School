@@ -14,7 +14,6 @@ from ttests.models import Test
 from rest_framework.exceptions import NotFound, ValidationError
 
 
-# Voltar aqui quando conf app classes
 class StudentView(SchoolPermissionMixin, generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner]
@@ -176,15 +175,6 @@ class AttendanceView(SchoolPermissionMixin, generics.ListCreateAPIView):
         ).first()
         if not find_classroom:
             raise NotFound("Classroom not found")
-
-        # Check de presença para um update. Removendo pois não faz sentido sem determinar as aulas e identificar individualmente
-        # find_attendance = Attendance.objects.filter(
-        #     classroom_id=classroom_id,
-        #     student_id=student_id,
-        #     classroom__cclass__course__school_id=school_id
-        # ).first()
-        # if find_attendance:
-        #     raise ValidationError("Registro de presença encontrado")
 
         serializer.save(student_id=student_id, classroom_id=classroom_id)
 

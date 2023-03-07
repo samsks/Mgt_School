@@ -4,7 +4,6 @@ from utils.choice_messages import choices_error_message
 from utils.choice_classes import PeriodOptions
 
 
-# Voltar aqui ao conf classes
 class ClassSerializer(serializers.ModelSerializer):
 
     class Meta:

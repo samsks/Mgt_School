@@ -12,27 +12,10 @@ import ipdb
 # last login not implemented
 class AccountView(generics.ListCreateAPIView):
 
-    # def get_authenticators(self):
-    #     if self.request.method == 'GET':
-    #         return [JWTAuthentication]
-    #     return super().get_authenticators()
-
-    # def get_permissions(self):
-    #     if self.request.method == 'GET':
-    #         return [IsAuthenticatedAndAdmin]
-    #     elif self.request.method == 'POST':
-    #         return [AllowAny()]
-    #     return super().get_permissions()
-
-    # authentication_classes = get_authenticators
-    # permission_classes = get_permissions
-
     queryset = Account.objects.filter(is_active=True)
     serializer_class = AccountSerializer
 
 
-# Estado atual: Funcionando por dono ou admin
-# Excluindo normalmente, descomentar antes de subir
 class AccountDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     authentication_classes = [JWTAuthentication]
@@ -42,7 +25,3 @@ class AccountDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AccountSerializer
 
     lookup_url_kwarg = "account_id"
-
-    # def perform_destroy(self, instance: Account):
-    #     instance.is_active = False
-    #     instance.save()

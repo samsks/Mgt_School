@@ -9,7 +9,6 @@ from schools.models import School
 from schools.mixins import SchoolPermissionMixin
 
 
-# Voltar aqui quando conf app classes
 class CourseView(SchoolPermissionMixin, generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner]

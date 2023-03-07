@@ -4,7 +4,6 @@ from utils.choice_messages import choices_error_message
 from utils.choice_classes import GenderOptions
 
 
-# Voltar aqui ao conf classes
 class StudentSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -23,7 +22,6 @@ class StudentSerializer(serializers.ModelSerializer):
             'registered_at',
             'updated_at',
             'school_id',
-            # 'class_id',
         ]
         read_only_fields = ["register_number", 'registered_at', 'updated_at', 'fired_at', 'school_id']
         extra_kwargs = {
@@ -44,12 +42,6 @@ class ClassRegistrationSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {"class_id": {"source": "cclass_id"}}
 
-    # def create(self, validated_data):
-    #     course_id = validated_data.pop('course_id')
-    #     class_id = validated_data.pop('class_id')
-    #     test = Test.objects.create(**validated_data)
-    #     return test
-
 
 class TestResultSerializer(serializers.ModelSerializer):
     class Meta:
@@ -60,13 +52,6 @@ class TestResultSerializer(serializers.ModelSerializer):
             'student_id',
             'test_id',
         ]
-        # extra_kwargs = {"class_id": {"source": "cclass_id"}}
-
-    # def create(self, validated_data):
-    #     course_id = validated_data.pop('course_id')
-    #     class_id = validated_data.pop('class_id')
-    #     test = Test.objects.create(**validated_data)
-    #     return test
 
 
 class AttendanceSerializer(serializers.ModelSerializer):
@@ -79,10 +64,3 @@ class AttendanceSerializer(serializers.ModelSerializer):
             'classroom_id',
             'student_id',
         ]
-        # extra_kwargs = {"class_id": {"source": "cclass_id"}}
-
-    # def create(self, validated_data):
-    #     course_id = validated_data.pop('course_id')
-    #     class_id = validated_data.pop('class_id')
-    #     test = Test.objects.create(**validated_data)
-    #     return test

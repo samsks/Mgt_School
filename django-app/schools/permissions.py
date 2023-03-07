@@ -11,10 +11,7 @@ from rest_framework import permissions
 
 
 class IsAdminOrSchoolOwner(permissions.BasePermission):
-    def has_object_permission(
-        self, request: Request, view: View,
-        obj: School | Teacher | Student | Course | Class | Classroom | Test | ClassRegistration | Attendance | TestResult
-    ) -> bool:
+    def has_object_permission(self, request: Request, view: View, obj) -> bool:
         school_id = view.kwargs.get('school_id')
 
         if request.user.is_superuser:
