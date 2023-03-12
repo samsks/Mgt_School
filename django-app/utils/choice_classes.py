@@ -1,9 +1,10 @@
 from django.db import models
 
 
-class OfficeOptions(models.TextChoices):
-    ACCOUNT_OWNER = 'Account_Owner'
+class AccountRoleOptions(models.TextChoices):
+    SCHOOL_OWNER = 'Owner'
     TEACHER = 'Teacher'
+    STUDENT = 'Student'
 
 
 class GenderOptions(models.TextChoices):

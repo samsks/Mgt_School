@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", False)
 
-ALLOWED_HOSTS = ["mgtschoolsamsks-production.up.railway.app", "0.0.0.0"]
+ALLOWED_HOSTS = ["mgtschoolsamsks-production.up.railway.app", "0.0.0.0", "localhost"]
 
 
 # Application definition
@@ -177,6 +177,6 @@ REST_FRAMEWORK = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'MGT School',
     'DESCRIPTION': 'Gerenciador escolar',
-    'VERSION': '1.0.0',
+    'VERSION': '0.3.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }

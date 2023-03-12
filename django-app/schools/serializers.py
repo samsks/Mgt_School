@@ -6,5 +6,14 @@ class SchoolSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = School
-        fields = ['id', 'company_name', 'cnpj', 'school_phone', 'account_id']
-        read_only_fields = ["account_id"]
+        fields = ['id', 'school_name', 'cnpj', 'school_phone', 'code']
+        # read_only_fields = []
+
+    # def create(self, validated_data):
+    #     school = School.objects.create(**validated_data)
+
+    #     user = self.context['request'].user
+    #     user.school = school
+    #     user.save()
+
+    #     return school
