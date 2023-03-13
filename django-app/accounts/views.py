@@ -116,7 +116,7 @@ class AccountTeacherView(generics.ListCreateAPIView):
         school_id = self.request.user.school_id
 
         if self.request.user.is_superuser:
-            return Account.objects.all()
+            return Account.objects.all(role='Teacher')
         elif self.request.user.school_id is None:
             raise ValidationError({'message': 'It is necessary to register a school before having teachers and students.'})
         return Account.objects.filter(school_id=school_id, role='Teacher', is_active=True)
@@ -167,31 +167,61 @@ class AccountStudentView(generics.ListCreateAPIView):
     # Filtro: apenas da escola que criou
     # Extras: Acrescentar query and params para campos como is_active, student_code, etc
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrTeacherForGet, IsAccountRoleOwnerForPost]
+    # permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrTeacherForGet, IsAccountRoleOwnerForPost]
 
-    # queryset = Account.objects.filter(role='Teacher')
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        return [IsAuthenticated(), IsAccountRoleOwnerOrAdmin()]
 
-    # Serializer compartilhado entre List e Create mostrando todos os campos para students
-    serializer_class = serializers.AccountStudentSerializer
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return serializers.AccountStudentListSerializer
+        return serializers.AccountStudentCreateSerializer
 
     def get_queryset(self):
         school_id = self.request.user.school_id
 
         if self.request.user.is_superuser:
-            return Account.objects.all()
+            return Account.objects.all(role='Student')
         elif self.request.user.school_id is None:
             raise ValidationError({'message': 'It is necessary to register a school before having teachers and students.'})
-        # colocar relacionamento com suas aulas
-        elif self.request.user.role == 'Teacher':
-            return Account.objects.filter(school_id=school_id, role='Student', )
-        return Account.objects.filter(school_id=school_id, role='Student')
+        return Account.objects.filter(school_id=school_id, role='Student', is_active=True)
 
 
-# class AccountTeacherCreateView(generics.CreateAPIView):
-#     # Função: Criar uma conta da role student
-#     # Permissões: autenticado, dono da escola específica, ter a role Owner.
-#     # Filtro: apenas da escola que criou
-#     # Extras: Nenhum
-#     queryset = Account.objects.filter(is_active=True)
-#     # Serializer compartilhado entre List e Create mostrando todos os campos para students
-#     serializer_class = serializers.AccountStudentSerializer
+class AccountStudentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    # Função: Listar todas as contas da role professor
+    # Permissões: autenticado, dono da escola específica e ter a role Owner.
+    # Filtro: apenas da escola que criou
+    # Extras: Acrescentar query and params para campos como is_active, fired_at, major, etc
+    authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin]
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        elif self.request.method == 'PATCH':
+            return [IsAuthenticated(), IsAccountOwnerOrAdmin()]
+        return [IsAuthenticated(), IsAccountRoleOwnerOrAdmin()]
+
+    def get_serializer_class(self):
+        if self.request.method == 'PATCH':
+            return serializers.AccountStudentUpdateSerializer
+        return serializers.AccountStudentListSerializer
+
+    lookup_url_kwarg = "account_id"
+
+    def get_queryset(self):
+        school_id = self.request.user.school_id
+
+        if self.request.user.is_superuser:
+            return Account.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
+        elif self.request.user.school_id is None:
+            raise ValidationError({'message': 'It is necessary to register a school before having teachers and students.'})
+        # elif self.request.user.role is "Owner":
+        #     return Account.objects.filter(school_id=school_id, role='Student')
+        return Account.objects.filter(school_id=school_id, role='Student', is_active=True)
+
+    def perform_destroy(self, instance: Account):
+        instance.is_active = False
+        instance.save()

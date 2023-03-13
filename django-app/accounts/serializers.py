@@ -241,17 +241,6 @@ class AccountTeacherCreateSerializer(serializers.ModelSerializer):
             teacher_id=generate_unique_uuid(Account, 'teacher_id'),
         )
 
-    def update(self, instance: Account, validated_data: dict) -> Account:
-        for key, value in validated_data.items():
-            if key == "password":
-                instance.set_password(value)
-                continue
-            setattr(instance, key, value)
-
-        instance.save()
-
-        return instance
-
     class Meta:
         model = Account
         fields = [
@@ -398,6 +387,15 @@ class AccountStudentSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance: Account, validated_data: dict) -> Account:
+        valid_data = validated_data.copy()
+        for attr, value in validated_data.items():
+            if getattr(instance, attr) == value:
+                print(attr)
+                valid_data.pop(attr)
+
+        if not valid_data:
+            raise ValidationError({'message': 'There are no changes to be saved.'})
+
         for key, value in validated_data.items():
             if key == "password":
                 instance.set_password(value)
@@ -444,6 +442,181 @@ class AccountStudentSerializer(serializers.ModelSerializer):
             'is_superuser',
             'teacher_id',
             'major',
+            'fired_at',
+            'fired_reason',
+            'student_id',
+            'student_code',
+        ]
+        extra_kwargs = {
+            "password": {"write_only": True},
+        }
+
+
+class AccountStudentListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Account
+        fields = [
+            'id',
+            'role',
+            'is_active',
+            'first_name',
+            'last_name',
+            'email',
+            'birthdate',
+            'phone',
+            'photo',
+            'bio',
+        ]
+        read_only_fields = [
+            'role',
+            'date_joined',
+            'last_login',
+            'is_staff',
+            'updated_at',
+            'is_superuser',
+            'is_active',
+            'school_id',
+            'teacher_id',
+            'fired_at',
+            'fired_reason',
+            'student_id',
+            'student_code',
+        ]
+
+
+class AccountStudentCreateSerializer(serializers.ModelSerializer):
+
+    def validate_role(self, value):
+        if value not in AccountRoleOptions.STUDENT:
+            raise serializers.ValidationError({'message': "This field must be set to 'Student'."})
+        return value
+
+    def create(self, validated_data: dict) -> Account:
+        user = self.context['request'].user
+        validated_data['school_id'] = user.school_id
+
+        cpf = str(validated_data.get("cpf"))
+        last_name = validated_data.get("last_name")
+
+        return Account.objects.create_user(
+            **validated_data,
+            username=str(cpf),
+            password=f"{cpf[:4]}@{last_name}",
+            role='Student',
+            student_id=generate_unique_uuid(Account, 'student_id'),
+            student_code=generate_student_code(Account, 'student_code')
+        )
+
+    class Meta:
+        model = Account
+        fields = [
+            'id',
+            'username',
+            'role',
+            'date_joined',
+            'last_login',
+            'is_staff',
+            'is_active',
+            'school_id',
+            'cpf',
+            'first_name',
+            'middle_name',
+            'last_name',
+            'email',
+            'birthdate',
+            'phone',
+            'photo',
+            'bio',
+            'updated_at',
+            'student_id',
+            'student_code',
+        ]
+        read_only_fields = [
+            'username',
+            'role',
+            'date_joined',
+            'last_login',
+            'is_staff',
+            'updated_at',
+            'is_superuser',
+            'teacher_id',
+            'major',
+            'fired_at',
+            'fired_reason',
+            'student_id',
+            'student_code',
+        ]
+        extra_kwargs = {
+            "password": {"write_only": True},
+        }
+
+
+class AccountStudentUpdateSerializer(serializers.ModelSerializer):
+
+    def validate_role(self, value):
+        if value not in AccountRoleOptions.STUDENT:
+            raise serializers.ValidationError({'message': "This field must be set to 'Student'."})
+        return value
+
+    def update(self, instance: Account, validated_data: dict) -> Account:
+        valid_data = validated_data.copy()
+        for attr, value in validated_data.items():
+            if getattr(instance, attr) == value:
+                print(attr)
+                valid_data.pop(attr)
+
+        if not valid_data:
+            raise ValidationError({'message': 'There are no changes to be saved.'})
+
+        for key, value in validated_data.items():
+            if key == "password":
+                instance.set_password(value)
+                continue
+            setattr(instance, key, value)
+
+        instance.save()
+
+        return instance
+
+    class Meta:
+        model = Account
+        fields = [
+            'id',
+            'username',
+            'role',
+            'date_joined',
+            'last_login',
+            'is_active',
+            'updated_at',
+            'school_id',
+            'cpf',
+            'first_name',
+            'middle_name',
+            'last_name',
+            'email',
+            'birthdate',
+            'phone',
+            'photo',
+            'bio',
+            'student_id',
+            'student_code',
+        ]
+        read_only_fields = [
+            'role',
+            'date_joined',
+            'last_login',
+            'is_staff',
+            'is_active',
+            'updated_at',
+            'is_superuser',
+            'schools_id',
+            'cpf',
+            'first_name',
+            'middle_name',
+            'last_name',
+            'birthdate',
+            'teacher_id',
             'fired_at',
             'fired_reason',
             'student_id',

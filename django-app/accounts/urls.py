@@ -12,7 +12,7 @@ urlpatterns = [
     path("teachers/<int:account_id>", views.AccountTeacherDetailView.as_view()),
     # Endpoints for Students User Account
     path("students/", views.AccountStudentView.as_view()),
-    # path("new_students/", views.AccountStudentCreateView.as_view()),
+    path("students/<int:account_id>", views.AccountStudentDetailView.as_view()),
     # Endpoints for Authentication Accounts
     path("login/", TokenObtainPairView.as_view()),
     path("refresh/", TokenRefreshView.as_view()),
