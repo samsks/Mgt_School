@@ -4,11 +4,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     # Endpoints for Owner User Account
-    path("<int:school_id>/accounts/", views.AccountOwnerListView.as_view()),
+    path("accounts/schools/<int:school_id>/", views.AccountOwnerListView.as_view()),
     path("accounts/", views.AccountOwnerCreateView.as_view()),
-    # path("accounts/<int:account_id>", views.AccountDetailView.as_view()), verificar
+    path("accounts/<int:account_id>", views.AccountDetailView.as_view()),
     # Endpoints for Teacher User Account
     path("teachers/", views.AccountTeacherView.as_view()),
+    path("teachers/<int:account_id>", views.AccountTeacherDetailView.as_view()),
     # Endpoints for Students User Account
     path("students/", views.AccountStudentView.as_view()),
     # path("new_students/", views.AccountStudentCreateView.as_view()),

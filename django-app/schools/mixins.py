@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from .models import School
+from accounts.models import Account
 
 
 class SchoolPermissionMixin:
@@ -13,8 +14,9 @@ class SchoolPermissionMixin:
 
         school_id = self.kwargs[self.school_url_kwarg]
         school_obj = get_object_or_404(School, pk=school_id)
-
         self.check_object_permissions(self.request, school_obj)
+        # account_obj = get_object_or_404(Account, school_id=school_id, pk=self.request.user.id)
+        # self.check_object_permissions(self.request, account_obj)
 
     def get(self, request, *args, **kwargs):
         self.check_custom_object_permission()

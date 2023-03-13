@@ -17,6 +17,7 @@ class School(models.Model):
         unique=True,
         error_messages={"unique": "This code field must be unique."}
     )
+    is_active = models.BooleanField(default=True)
 
     # account = models.ForeignKey(
     #     'accounts.Account',

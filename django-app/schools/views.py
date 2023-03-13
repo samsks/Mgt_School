@@ -23,7 +23,7 @@ class SchoolView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         account = self.request.user
         if account.school:
-            raise ValidationError("Your account already has a school.")
+            raise ValidationError({'message': "Your account already has a school."})
         school = serializer.save()
         account.school = school
         account.save()

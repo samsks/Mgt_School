@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from utils.choice_classes import AccountRoleOptions
-# from utils.function_account import generate_unique_uuid, generate_student_code
 import uuid
 
 
@@ -53,48 +52,3 @@ class Account(AbstractUser):
         related_name='accounts',
         null=True
     )
-
-    @classmethod
-    def generate_student_code(cls, model, field):
-        """
-        Generate a unique student_code for Account role Student.
-        """
-        now = datetime.now()
-        occurrence = 0
-
-        while True:
-            student_code = f"{now.year}{now.month:02d}{now.day:02d}-{now.hour:02d}{now.minute:02d}{now.minute:02d}.{occurrence:02d}"
-            try:
-                model.objects.create(**{field: student_code})
-            except IntegrityError:
-                occurrence = occurrence + 1
-                continue
-            else:
-                return student_code
-
-    @classmethod
-    def generate_unique_uuid(cls, model, field):
-        """
-        Generate a unique UUID for Account role Student and Teacher.
-        """
-        while True:
-            uuid_value = uuid.uuid4()
-            try:
-                model.objects.create(**{field: uuid_value})
-            except IntegrityError:
-                continue
-            else:
-                return uuid_value
-
-    # def save(self, *args, **kwargs):
-    #     if self.request.method == 'POST':
-    #         if self.role == 'Teacher':
-    #             self.username = str(self.cpf)
-    #             self.password = f"{self.cpf[:4]}@{self.last_name}"
-    #             self.teacher_id = self.generate_unique_uuid(Account, 'teacher_id')
-    #         elif self.role == 'Student':
-    #             self.username = self.cpf
-    #             self.password = f"{self.cpf[:4]}@{self.last_name}"
-    #             self.student_code = self.generate_student_code(Account, 'student_code')
-    #             self.student_id = self.generate_unique_uuid(Account, 'student_id')
-    #     super(Account, self).save(*args, **kwargs)

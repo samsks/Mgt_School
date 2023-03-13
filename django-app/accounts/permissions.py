@@ -13,6 +13,27 @@ class IsAccountRoleOwnerOrAdmin(permissions.BasePermission):
         return request.user.role == "Owner" or request.user.is_superuser
 
 
+class IsAccountRoleTeacherOrAdmin(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View):
+        return request.user.role == "Teacher" or request.user.is_superuser
+
+
+class IsAccountRoleOwnerOrTeacherForGet(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View):
+
+        if request.method == "GET":
+            return request.user.role == "Owner" or request.user.role == "Teacher" or request.user.is_superuser
+        return True
+
+
+class IsAccountRoleOwnerForPost(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View):
+
+        if request.method == "POST":
+            return request.user.role == "Owner" or request.user.is_superuser
+        return True
+
+
 class IsAccountHasSchool(permissions.BasePermission):
     def has_permission(self, request: Request, view: View):
         return request.user.school_id is not None
