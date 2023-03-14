@@ -2,11 +2,7 @@ from django.db import models
 
 
 class School(models.Model):
-    school_name = models.CharField(
-        max_length=127,
-        # unique=True,
-        # error_messages={"unique": "This field must be unique."}
-    )
+    school_name = models.CharField(max_length=127)
     cnpj = models.BigIntegerField(
         unique=True,
         error_messages={"unique": "This field must be unique."}
@@ -18,9 +14,3 @@ class School(models.Model):
         error_messages={"unique": "This code field must be unique."}
     )
     is_active = models.BooleanField(default=True)
-
-    # account = models.ForeignKey(
-    #     'accounts.Account',
-    #     on_delete=models.CASCADE,
-    #     related_name='schools',
-    # )

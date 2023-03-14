@@ -13,11 +13,17 @@ class GenderOptions(models.TextChoices):
     NOT_INFORMED = 'Not Informed'
 
 
+class ModalityOptions(models.TextChoices):
+    PERSON = 'Person'
+    ONLINE = 'Online'
+    HYBRID = 'Hybrid'
+
+
 class PeriodOptions(models.TextChoices):
     MORNING = 'Morning'
     AFTERNOON = 'Afternoon'
     NIGHT = 'Night'
-    NOT_INFORMED = 'Not Informed'
+    CUSTOM = 'Custom'
 
 
 class CategoryTestOptions(models.TextChoices):
@@ -27,3 +33,20 @@ class CategoryTestOptions(models.TextChoices):
     FTHQUARTER = '4th Quarter'
     FSTRECOVERY = '1st Recovery'
     SNDRECOVERY = '2nd Recovery'
+
+
+class WeekdaysOptions(models.TextChoices):
+    SUNDAY = 'Sunday'
+    MONDAY = 'Monday'
+    TUESDAY = 'Tuesday'
+    WEDNESDAY = 'Wednesday'
+    THURSDAY = 'Thursday'
+    FRIDAY = 'Friday'
+    SATURDAY = 'Saturday'
+
+
+class RepeatModeOptions(models.TextChoices):
+    WEEKLY = 'Weekly'
+    BIWEEKLY = 'Biweekly'
+    MONTHLY = 'Monthly'
+    YEARLY = 'Yearly'

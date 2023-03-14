@@ -44,11 +44,12 @@ THIRD_PARTY_APPS = [
 MY_APPS = [
     "accounts",
     "schools",
-    "teachers",
-    "students",
+    # "teachers",
+    # "students",
     "courses",
     "classes",
     "classrooms",
+    "occurrences",
     "ttests",
 ]
 

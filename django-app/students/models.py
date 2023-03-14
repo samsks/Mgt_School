@@ -78,7 +78,7 @@ class TestResult(models.Model):
     test_grade = models.DecimalField(max_digits=12, decimal_places=2)
 
     class Meta:
-        db_table = 'students_test_result'
+        db_table = 'students_test_results'
 
 
 class Attendance(models.Model):
@@ -87,3 +87,4 @@ class Attendance(models.Model):
 
     showed_up = models.BooleanField(default=False)
     register_date = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

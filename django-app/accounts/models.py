@@ -52,3 +52,69 @@ class Account(AbstractUser):
         related_name='accounts',
         null=True
     )
+
+
+# PIVOT TABLES ONLY FOR ROLE STUDENT
+
+class ClassRegistration(models.Model):
+    student = models.ForeignKey(
+        Account,
+        to_field='student_id',
+        on_delete=models.CASCADE,
+        related_name='class_registration',
+        limit_choices_to={'role': 'Student'},
+    )
+    cclass = models.ForeignKey(
+        'classes.Class',
+        on_delete=models.CASCADE,
+        related_name='class_registration'
+    )
+
+    registered_at = models.DateField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def clean(self):
+        if self.teacher is not None and self.teacher.role != 'Student':
+            raise ValidationError({'message': 'A student must be selected.'})
+
+    class Meta:
+        db_table = 'students_class_registration'
+
+
+class TestResult(models.Model):
+    student = models.ForeignKey(
+        Account,
+        to_field='student_id',
+        on_delete=models.CASCADE,
+        related_name='test_results',
+        limit_choices_to={'role': 'Student'},
+    )
+    test = models.ForeignKey(
+        'ttests.Test',
+        on_delete=models.CASCADE,
+        related_name='test_results',
+    )
+
+    test_grade = models.DecimalField(max_digits=12, decimal_places=2)
+
+    class Meta:
+        db_table = 'students_test_results'
+
+
+class Attendance(models.Model):
+    student = models.ForeignKey(
+        Account,
+        to_field='student_id',
+        on_delete=models.CASCADE,
+        related_name='attendance',
+        limit_choices_to={'role': 'Student'},
+    )
+    occurrence = models.ForeignKey(
+        'occurrences.Occurrence',
+        on_delete=models.CASCADE,
+        related_name='attendance',
+    )
+
+    showed_up = models.BooleanField(default=False)
+    register_date = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

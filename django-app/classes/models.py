@@ -1,17 +1,20 @@
 from django.db import models
-from utils.choice_classes import PeriodOptions
+from utils.choice_classes import PeriodOptions, ModalityOptions
 
 
 class Class(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(null=True)
-    duration = models.CharField(max_length=20, null=True)
+    # duration = models.CharField(max_length=20, null=True)
     period = models.CharField(
-        max_length=20,
+        max_length=10,
         choices=PeriodOptions.choices,
-        default=PeriodOptions.NOT_INFORMED,
     )
-    hour = models.TimeField()
+    modality = models.CharField(
+        max_length=6,
+        choices=ModalityOptions.choices,
+    )
+    # hour = models.TimeField()
 
     course = models.ForeignKey(
         'courses.Course',
@@ -19,9 +22,9 @@ class Class(models.Model):
         related_name='classes',
     )
 
-    teacher = models.ForeignKey(
-        'teachers.Teacher',
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='classes',
-    )
+    # teacher = models.ForeignKey(
+    #     'teachers.Teacher',
+    #     on_delete=models.SET_NULL,
+    #     null=True,
+    #     related_name='classes',
+    # )
