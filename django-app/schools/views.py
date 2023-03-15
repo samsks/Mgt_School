@@ -1,5 +1,5 @@
 from .models import School
-from .serializers import SchoolSerializer
+from .serializers import SchoolSerializer, SchoolOnlyInfoSerializer
 from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from accounts.permissions import IsAccountOwnerOrAdmin, IsAccountRoleOwnerOrAdmin
@@ -32,9 +32,29 @@ class SchoolView(generics.ListCreateAPIView):
 class SchoolDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner]
+    # permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner]
 
-    queryset = School.objects.all()
-    serializer_class = SchoolSerializer
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        return [IsAuthenticated(), IsAccountRoleOwnerOrAdmin()]
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET' and self.request.user.role != 'Owner':
+            return SchoolOnlyInfoSerializer
+        return SchoolSerializer
 
     lookup_url_kwarg = "school_id"
+
+    def get_queryset(self):
+        school_id = self.kwargs[self.lookup_url_kwarg]
+
+        if self.request.user.is_superuser:
+            return Account.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
+        elif self.request.user.school_id is not school_id:
+            raise ValidationError({'message': 'Invalid school identifier.'})
+        return Account.objects.filter(id=school_id)
+
+    def perform_destroy(self, instance: School):
+        instance.is_active = False
+        instance.save()

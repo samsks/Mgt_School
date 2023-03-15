@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from utils.choice_classes import AccountRoleOptions
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from django.utils import timezone
 import uuid
 
 
@@ -53,9 +56,14 @@ class Account(AbstractUser):
         null=True
     )
 
+    # testar
+    # @receiver(pre_save, sender=Account)
+    # def set_fired_at(sender, instance, **kwargs):
+    #     if not instance.is_active and instance.role == 'Teacher' and not instance.fired_at:
+    #         instance.fired_at = timezone.now()
+
 
 # PIVOT TABLES ONLY FOR ROLE STUDENT
-
 class ClassRegistration(models.Model):
     student = models.ForeignKey(
         Account,

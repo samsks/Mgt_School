@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Test",
+            name="Occurrence",
             fields=[
                 (
                     "id",
@@ -24,30 +24,29 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
+                ("start", models.TimeField()),
+                ("end", models.TimeField()),
                 (
-                    "category",
+                    "weekday",
                     models.CharField(
                         choices=[
-                            ("1st Quarter", "Fstquarter"),
-                            ("2nd Quarter", "Sndquarter"),
-                            ("3rd Quarter", "Trdquarter"),
-                            ("4th Quarter", "Fthquarter"),
-                            ("1st Recovery", "Fstrecovery"),
-                            ("2nd Recovery", "Sndrecovery"),
+                            ("Sunday", "Sunday"),
+                            ("Monday", "Monday"),
+                            ("Tuesday", "Tuesday"),
+                            ("Wednesday", "Wednesday"),
+                            ("Thursday", "Thursday"),
+                            ("Friday", "Friday"),
+                            ("Saturday", "Saturday"),
                         ],
-                        max_length=12,
+                        max_length=10,
                     ),
                 ),
-                ("test_date", models.DateTimeField()),
-                (
-                    "max_score",
-                    models.DecimalField(decimal_places=2, default=10, max_digits=5),
-                ),
+                ("date", models.DateField()),
                 (
                     "classroom",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        related_name="tests",
+                        related_name="occurrences",
                         to="classrooms.classroom",
                     ),
                 ),

@@ -15,10 +15,11 @@ class Class(models.Model):
         choices=ModalityOptions.choices,
     )
     # hour = models.TimeField()
+    is_active = models.BooleanField(default=True)
 
     course = models.ForeignKey(
         'courses.Course',
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='classes',
     )
 
