@@ -54,7 +54,7 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         if self.request.user.is_superuser:
             return Course.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
-        return Course.objects.filter(school_id=school_id)
+        return Course.objects.filter(school_id=school_id, pk=self.kwargs[self.lookup_url_kwarg])
 
     def perform_destroy(self, instance: Course):
         instance.is_active = False

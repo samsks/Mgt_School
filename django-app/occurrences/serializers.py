@@ -1,10 +1,12 @@
 from rest_framework import serializers
-from .models import Classroom
+from .models import Occurrence
+from utils.choice_messages import choices_error_message
+from utils.choice_classes import WeekdaysOptions
 
 
-class ClassroomSerializer(serializers.ModelSerializer):
+class OccurrenceSerializer(serializers.ModelSerializer):
 
-    def update(self, instance: Classroom, validated_data: dict) -> Classroom:
+    def update(self, instance: Occurrence, validated_data: dict) -> Occurrence:
 
         valid_data = validated_data.copy()
         for attr, value in validated_data.items():
@@ -22,16 +24,15 @@ class ClassroomSerializer(serializers.ModelSerializer):
         return instance
 
     class Meta:
-        model = Classroom
+        model = Occurrence
         fields = [
             'id',
-            'matter_name',
-            'start_date',
-            'end_date',
-            'repeat_mode',
-            'class_id',
-            'teacher_id',
+            'start',
+            'end',
+            'weekday',
+            'date',
+            'classroom_id',
         ]
         extra_kwargs = {
-            'class_id': {'source': 'cclass_id'},
+            "weekday": {"error_messages": {"invalid_choice": choices_error_message(WeekdaysOptions)}},
         }

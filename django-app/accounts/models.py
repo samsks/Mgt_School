@@ -79,6 +79,7 @@ class ClassRegistration(models.Model):
     )
 
     registered_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
     def clean(self):
@@ -104,6 +105,8 @@ class TestResult(models.Model):
     )
 
     test_grade = models.DecimalField(max_digits=12, decimal_places=2)
+    registered_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
 
     class Meta:
         db_table = 'students_test_results'

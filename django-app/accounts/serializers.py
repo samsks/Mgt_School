@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Account
+from .models import Account, ClassRegistration, TestResult, Attendance
 from django.contrib.auth.hashers import make_password
 from utils.choice_classes import AccountRoleOptions
 from utils.choice_messages import choices_error_message
@@ -625,3 +625,101 @@ class AccountStudentUpdateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "password": {"write_only": True},
         }
+
+
+# PIVOT TABLES SERIALIZERS WITH STUDENT
+
+class ClassRegistrationSerializer(serializers.ModelSerializer):
+
+    def update(self, instance: ClassRegistration, validated_data: dict) -> ClassRegistration:
+
+        valid_data = validated_data.copy()
+        for attr, value in validated_data.items():
+            if getattr(instance, attr) == value:
+                valid_data.pop(attr)
+
+        if not valid_data:
+            raise ValidationError({'message': 'There are no changes to be saved.'})
+
+        for key, value in valid_data.items():
+            setattr(instance, key, value)
+
+        instance.save()
+
+        return instance
+
+    class Meta:
+        model = ClassRegistration
+        fields = [
+            'id',
+            'registered_at',
+            'updated_at',
+            'is_active',
+            'student_id',
+            'class_id',
+        ]
+        read_only_fields = ['registered_at', 'updated_at']
+        extra_kwargs = {"class_id": {"source": "cclass_id"}}
+
+
+class TestResultSerializer(serializers.ModelSerializer):
+
+    def update(self, instance: TestResult, validated_data: dict) -> TestResult:
+
+        valid_data = validated_data.copy()
+        for attr, value in validated_data.items():
+            if getattr(instance, attr) == value:
+                valid_data.pop(attr)
+
+        if not valid_data:
+            raise ValidationError({'message': 'There are no changes to be saved.'})
+
+        for key, value in valid_data.items():
+            setattr(instance, key, value)
+
+        instance.save()
+
+        return instance
+
+    class Meta:
+        model = TestResult
+        fields = [
+            'id',
+            'test_grade',
+            'registered_at',
+            'updated_at',
+            'student_id',
+            'test_id',
+        ]
+        read_only_fields = ['registered_at', 'updated_at']
+
+
+class AttendanceSerializer(serializers.ModelSerializer):
+
+    def update(self, instance: Attendance, validated_data: dict) -> Attendance:
+
+        valid_data = validated_data.copy()
+        for attr, value in validated_data.items():
+            if getattr(instance, attr) == value:
+                valid_data.pop(attr)
+
+        if not valid_data:
+            raise ValidationError({'message': 'There are no changes to be saved.'})
+
+        for key, value in valid_data.items():
+            setattr(instance, key, value)
+
+        instance.save()
+
+        return instance
+
+    class Meta:
+        model = Attendance
+        fields = [
+            'id',
+            'showed_up',
+            'register_date',
+            'updated_at',
+            'occurrence_id',
+            'student_id',
+        ]

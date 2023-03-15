@@ -21,27 +21,6 @@ class Course(models.Model):
         related_name='courses',
     )
 
-    # levels = models.ManyToManyField(
-    #     'courses.Level',
-    #     # on_delete=models.CASCADE,
-    #     related_name='course',
-    #     # db_table='course_levels',
-    # )
-
-    # degrees = models.ManyToManyField(
-    #     'courses.Degree',
-    #     # on_delete=models.CASCADE,
-    #     related_name='course',
-    #     # db_table='course_degrees',
-    # )
-
-    # themes = models.ManyToManyField(
-    #     'courses.Theme',
-    #     # on_delete=models.CASCADE,
-    #     related_name='course',
-    #     # db_table='course_themes',
-    # )
-
 
 class Level(models.Model):
     name = models.CharField(

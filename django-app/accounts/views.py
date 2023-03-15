@@ -1,4 +1,4 @@
-from .models import Account
+from .models import Account, ClassRegistration, TestResult, Attendance
 from schools.models import School
 from accounts import serializers
 from rest_framework import generics
@@ -225,3 +225,221 @@ class AccountStudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     def perform_destroy(self, instance: Account):
         instance.is_active = False
         instance.save()
+
+
+# NOMEAR
+class ClassRegistrationListView(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    # Ajeitar - Dono do objeto tbm pode
+    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin]
+
+    serializer_class = serializers.ClassRegistrationSerializer
+
+    student_url_kwarg = 'student_id'
+
+    def get_queryset(self):
+        student_id = self.kwargs['student_id']
+        school_id = self.request.user.school_id
+        if self.request.user.is_superuser:
+            return ClassRegistration.objects.filter(student_id=student_id)
+        return ClassRegistration.objects.filter(
+            course__school_id=school_id, 
+            student_id=student_id
+        )
+
+
+class ClassRegistrationCreateView(generics.CreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    # Ajeitar
+    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin]
+
+    serializer_class = serializers.ClassRegistrationSerializer
+
+    # def get_queryset(self):
+    #     if self.request.user.is_superuser:
+    #         return ClassRegistration.objects.all()
+    #     school_id = self.request.user.school_id
+    #     return ClassRegistration.objects.filter(account__school_id=school_id)
+
+    def perform_create(self, serializer):
+        school_id = self.request.user.school_id
+        class_id = self.request.data.get('class_id')
+        student_id = self.request.data.get('student_id')
+
+        find_student = Account.objects.filter(
+            school_id=school_id,
+            student_id=student_id,
+            role='Student',
+        ).first()
+        if not find_student:
+            raise NotFound("Student not found")
+
+        find_class = Class.objects.filter(
+            pk=class_id,
+            course__school_id=school_id
+        ).first()
+        if not find_class:
+            raise NotFound("Class not found")
+
+        serializer.save(student_id=student_id, cclass_id=class_id)
+
+
+class ClassRegistrationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin,]
+
+    serializer_class = serializers.ClassRegistrationSerializer
+
+    lookup_url_kwarg = "class_register_id"
+
+    def get_queryset(self):
+        school_id = self.request.user.school_id
+
+        if self.request.user.is_superuser:
+            return ClassRegistration.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
+        return ClassRegistration.objects.filter(course__school_id=school_id, pk=self.kwargs[self.lookup_url_kwarg])
+
+
+class TestResultListView(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    # Ajustar
+    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin]
+
+    serializer_class = serializers.TestResultSerializer
+
+    student_url_kwarg = 'student_id'
+
+    def get_queryset(self):
+        school_id = self.request.user.school_id
+        student_id = self.kwargs['student_id']
+        if self.request.user.is_superuser:
+            return TestResult.objects.filter(student_id=student_id)
+        return TestResult.objects.filter(
+            classroom__cclass__course__school_id=school_id,
+            student_id=student_id
+        )
+
+
+class TestResultCreateView(generics.CreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    # Ajeitar
+    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin]
+
+    serializer_class = serializers.TestResultSerializer
+
+    # def get_queryset(self):
+    #     if self.request.user.is_superuser:
+    #         return TestResult.objects.all()
+    #     school_id = self.request.user.school_id
+    #     student_id = self.kwargs['student_id']
+    #     return TestResult.objects.filter(classroom__cclass__course__school_id=school_id)
+
+    def perform_create(self, serializer):
+        school_id = self.request.user.school_id
+        test_id = self.request.data.get('test_id')
+        student_id = self.request.data.get('student_id')
+
+        find_student = Account.objects.filter(
+            school_id=school_id,
+            student_id=student_id,
+            role='Student',
+        ).first()
+        if not find_student:
+            raise NotFound("Student not found")
+
+        find_test = Test.objects.filter(
+            pk=test_id,
+            classroom__cclass__course__school_id=school_id
+        ).first()
+        if not find_test:
+            raise NotFound("Test not found")
+
+        serializer.save(student_id=student_id, test_id=test_id)
+
+
+class TestResultDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin,]
+
+    serializer_class = serializers.TestResultSerializer
+
+    lookup_url_kwarg = "test_result_id"
+
+    def get_queryset(self):
+        school_id = self.request.user.school_id
+
+        if self.request.user.is_superuser:
+            return TestResult.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
+        return TestResult.objects.filter(classroom__cclass__course__school_id=school_id, pk=self.kwargs[self.lookup_url_kwarg])
+
+
+class AttendanceListView(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin]
+
+    serializer_class = serializers.AttendanceSerializer
+
+    student_url_kwarg = 'student_id'
+
+    def get_queryset(self):
+        school_id = self.request.user.school_id
+        student_id = self.kwargs['student_id']
+        if self.request.user.is_superuser:
+            return Attendance.objects.filter(student_id=student_id)
+        return Attendance.objects.filter(
+            occurrence__classroom__cclass__course__school_id=school_id,
+            student_id=student_id
+        )
+
+
+class AttendanceCreateView(generics.CreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin]
+
+    queryset = Attendance.objects.all()
+    serializer_class = serializers.AttendanceSerializer
+
+    # def get_queryset(self):
+    #     student_id = self.kwargs['student_id']
+    #     return Attendance.objects.filter(student__school_id=school_id)
+
+    def perform_create(self, serializer):
+        school_id = self.request.user.school_id
+        occurrence_id = self.request.data.get('occurrence_id')
+        student_id = self.request.data.get('student_id')
+
+        find_student = Account.objects.filter(
+            school_id=school_id,
+            student_id=student_id,
+            role='Student'
+        ).first()
+        if not find_student:
+            raise NotFound("Student not found")
+
+        find_occurrence = Occurrence.objects.filter(
+            pk=occurrence_id,
+            cclass__course__school_id=school_id
+        ).first()
+        if not find_occurrence:
+            raise NotFound("Occurrence not found")
+
+        serializer.save(student_id=student_id, occurrence_id=classroom_id)
+
+
+class AttendanceDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin,]
+
+    serializer_class = serializers.AttendanceSerializer
+
+    lookup_url_kwarg = "attendance_id"
+
+    def get_queryset(self):
+        school_id = self.request.user.school_id
+
+        if self.request.user.is_superuser:
+            return Attendance.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
+        return Attendance.objects.filter(
+            occurrence__classroom__cclass__course__school_id=school_id,
+            pk=self.kwargs[self.lookup_url_kwarg]
+        )

@@ -26,7 +26,7 @@ class ClassroomView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return Class.objects.all()
+            return Classroom.objects.all()
         school_id = self.request.user.school_id
         return Classroom.objects.filter(
             cclass__course__school_id=school_id,
@@ -79,8 +79,8 @@ class ClassroomDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         if self.request.user.is_superuser:
             return Classroom.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
-        return Classroom.objects.filter(cclass__course__school_id=school_id)
+        return Classroom.objects.filter(cclass__course__school_id=school_id, pk=self.kwargs[self.lookup_url_kwarg])
 
-    def perform_destroy(self, instance: Account):
+    def perform_destroy(self, instance: Classroom):
         instance.is_active = False
         instance.save()
