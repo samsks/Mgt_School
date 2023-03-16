@@ -50,10 +50,10 @@ class SchoolDetailView(generics.RetrieveUpdateDestroyAPIView):
         school_id = self.kwargs[self.lookup_url_kwarg]
 
         if self.request.user.is_superuser:
-            return Account.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
+            return School.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
         elif self.request.user.school_id is not school_id:
             raise ValidationError({'message': 'Invalid school identifier.'})
-        return Account.objects.filter(id=school_id)
+        return School.objects.filter(id=school_id)
 
     def perform_destroy(self, instance: School):
         instance.is_active = False

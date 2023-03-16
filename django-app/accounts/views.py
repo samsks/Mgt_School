@@ -40,10 +40,14 @@ class AccountOwnerListView(generics.ListAPIView):
     serializer_class = serializers.AccountOwnerSerializer
 
     def get_queryset(self):
+
         if self.request.user.is_superuser:
             school_id = self.kwargs[self.school_url_kwarg]
         else:
             school_id = self.request.user.school_id
+            if self.request.user.school_id is None:
+                raise ValidationError({'message': 'It is necessary to register a school before listing accounts.'})
+
         return Account.objects.filter(school_id=school_id)
 
 
@@ -62,20 +66,27 @@ class AccountOwnerCreateView(generics.CreateAPIView):
 class AccountDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin,]
+    permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin]
+
+    # def get_permissions(self):
+    #     if self.request.method == 'GET':
+    #         return [IsAuthenticated(), IsAccountRoleOwnerOrAdmin()]
+    #     return [IsAuthenticated(), IsAccountRoleOwnerOrAdmin(), IsAccountOwnerOrAdmin()]
 
     serializer_class = serializers.AccountOwnerDetailSerializer
 
     lookup_url_kwarg = "account_id"
 
     def get_queryset(self):
+        account_id = self.kwargs[self.lookup_url_kwarg]
         if self.request.user.is_superuser:
-            return Account.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
+            return Account.objects.filter(pk=account_id)
         else:
             school_id = self.request.user.school_id
         return Account.objects.filter(school_id=school_id)
 
     def perform_destroy(self, instance: Account):
+
         if instance.role == 'Owner':
 
             school_obj = School.objects.filter(pk=instance.school_id).first()
@@ -116,10 +127,15 @@ class AccountTeacherView(generics.ListCreateAPIView):
         school_id = self.request.user.school_id
 
         if self.request.user.is_superuser:
-            return Account.objects.all(role='Teacher')
+            return Account.objects.filter(role='Teacher')
         elif self.request.user.school_id is None:
             raise ValidationError({'message': 'It is necessary to register a school before having teachers and students.'})
         return Account.objects.filter(school_id=school_id, role='Teacher', is_active=True)
+
+    def perform_create(self, serializer):
+        if self.request.user.school_id is None:
+            raise ValidationError({'message': 'It is necessary to register a school before.'})
+        serializer.save()
 
 
 class AccountTeacherDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -183,10 +199,15 @@ class AccountStudentView(generics.ListCreateAPIView):
         school_id = self.request.user.school_id
 
         if self.request.user.is_superuser:
-            return Account.objects.all(role='Student')
+            return Account.objects.filter(role='Student')
         elif self.request.user.school_id is None:
             raise ValidationError({'message': 'It is necessary to register a school before having teachers and students.'})
         return Account.objects.filter(school_id=school_id, role='Student', is_active=True)
+
+    def perform_create(self, serializer):
+        if self.request.user.school_id is None:
+            raise ValidationError({'message': 'It is necessary to register a school before.'})
+        serializer.save()
 
 
 class AccountStudentDetailView(generics.RetrieveUpdateDestroyAPIView):
