@@ -4,5 +4,5 @@ from ttests.views import TestView, TestDetailView
 
 urlpatterns = [
     path("tests/", TestView.as_view()),
-    path("tests/<int:classroom_id>", TestDetailView.as_view()),
+    path("tests/<int:test_id>", TestDetailView.as_view()),
 ]
