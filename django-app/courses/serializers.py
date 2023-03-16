@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Course
 from utils.choice_classes import ModalityOptions
 from utils.choice_messages import choices_error_message
+from rest_framework.exceptions import ValidationError
 
 
 class CourseSerializer(serializers.ModelSerializer):

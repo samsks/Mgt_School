@@ -3,7 +3,7 @@ from .models import Course
 from .serializers import CourseSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from schools.permissions import IsAdminOrSchoolOwner
-from accounts.permissions import IsAccountRoleOwnerOrAdmin
+from accounts.permissions import IsAccountRoleOwnerOrAdmin, IsAccountRoleOwner
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from schools.models import School
@@ -17,9 +17,9 @@ class CourseView(generics.ListCreateAPIView):
     def get_permissions(self):
         if self.request.method == 'GET':
             return [IsAuthenticated()]
-        return [IsAuthenticated(), IsAccountRoleOwnerOrAdmin()]
+        return [IsAuthenticated(), IsAccountRoleOwner()]
 
-    # queryset = Course.objects.all()
+    # Colocar serializer específico para ADM
     serializer_class = CourseSerializer
 
     # school_url_kwarg = 'school_id'

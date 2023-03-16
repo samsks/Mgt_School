@@ -8,6 +8,13 @@ class IsAccountOwnerOrAdmin(permissions.BasePermission):
         return request.user == obj or request.user.is_superuser
 
 
+class IsAccountRoleOwner(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View):
+        if request.user.role == "Owner":
+            return True
+        return False
+
+
 class IsAccountRoleOwnerOrAdmin(permissions.BasePermission):
     def has_permission(self, request: Request, view: View):
         return request.user.role == "Owner" or request.user.is_superuser

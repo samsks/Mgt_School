@@ -5,6 +5,7 @@ class AccountRoleOptions(models.TextChoices):
     SCHOOL_OWNER = 'Owner'
     TEACHER = 'Teacher'
     STUDENT = 'Student'
+    ADMIN = 'ADM'
 
 
 class GenderOptions(models.TextChoices):
