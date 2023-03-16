@@ -1,46 +1,46 @@
 from rest_framework import generics
 from .models import Class
-from .serializers import ClassSerializer
+from .serializers import ClassSerializer, ClassCreateSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from accounts.permissions import IsAccountRoleOwnerOrAdmin
+from accounts.permissions import IsAccountRoleOwnerOrAdmin, IsAccountRoleOwner
 from schools.permissions import IsAdminOrSchoolOwner
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from courses.models import Course
 from schools.models import School
 from schools.mixins import SchoolPermissionMixin
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 
 
-# class ClassView(SchoolPermissionMixin, generics.ListCreateAPIView):
 class ClassView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
         if self.request.method == 'GET':
             return [IsAuthenticated()]
-        return [IsAuthenticated(), IsAccountRoleOwnerOrAdmin()]
+        return [IsAuthenticated(), IsAccountRoleOwner()]
 
-    serializer_class = ClassSerializer
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return ClassCreateSerializer
+        return ClassSerializer
 
-    # school_url_kwarg = 'school_id'
     def get_queryset(self):
+        school_id = self.request.user.school_id
         if self.request.user.is_superuser:
             return Class.objects.all()
-        # school_id = self.kwargs['school_id']
-        school_id = self.request.user.school_id
+        elif self.request.user.role == 'Student':
+            return Class.objects.filter(
+                # course__school_id=school_id,
+                class_registration__student__school_id=school_id
+            )
+
         return Class.objects.filter(course__school_id=school_id)
 
     def perform_create(self, serializer):
 
-        # school_id = self.kwargs[self.school_url_kwarg]
         school_id = self.request.user.school_id
         course_id = self.request.data.get('course_id')
-        # teacher_id = self.request.data.get('teacher_id')
-
-        # find_school = School.objects.filter(pk=school_id).first()
-        # if not find_school:
-        #     raise NotFound("School not found")
 
         find_course = Course.objects.filter(
             school_id=school_id,
@@ -48,15 +48,6 @@ class ClassView(generics.ListCreateAPIView):
         ).first()
         if not find_course:
             raise NotFound("Course not found")
-
-        # if teacher_id:
-        #     find_teacher = Teacher.objects.filter(
-        #         pk=teacher_id,
-        #         school_id=school_id
-        #     ).first()
-        #     if not find_teacher:
-        #         raise NotFound("Teacher not found")
-        #     serializer.save(course_id=course_id, teacher_id=teacher_id,)
 
         serializer.save(course_id=course_id,)
 

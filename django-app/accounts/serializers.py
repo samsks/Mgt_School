@@ -662,6 +662,24 @@ class ClassRegistrationSerializer(serializers.ModelSerializer):
         extra_kwargs = {"class_id": {"source": "cclass_id"}}
 
 
+class ClassRegistrationCreateSerializer(serializers.ModelSerializer):
+    student_id = serializers.UUIDField(required=True)
+    class_id = serializers.IntegerField(required=True, source="cclass_id")
+
+    class Meta:
+        model = ClassRegistration
+        fields = [
+            'id',
+            'registered_at',
+            'updated_at',
+            'is_active',
+            'student_id',
+            'class_id',
+        ]
+        read_only_fields = ['registered_at', 'updated_at', 'is_active']
+        # extra_kwargs = {"class_id": {"source": "cclass_id"}}
+
+
 class TestResultSerializer(serializers.ModelSerializer):
 
     def update(self, instance: TestResult, validated_data: dict) -> TestResult:

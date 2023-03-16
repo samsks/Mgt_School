@@ -34,7 +34,26 @@ class ClassSerializer(serializers.ModelSerializer):
             'is_active',
             'course_id',
         ]
-        read_only_fields = []
+        extra_kwargs = {
+            "period": {"error_messages": {"invalid_choice": choices_error_message(PeriodOptions)}},
+            "modality": {"error_messages": {"invalid_choice": choices_error_message(ModalityOptions)}},
+        }
+
+
+class ClassCreateSerializer(serializers.ModelSerializer):
+    course_id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Class
+        fields = [
+            'id',
+            'name',
+            'description',
+            'period',
+            'modality',
+            'is_active',
+            'course_id',
+        ]
         extra_kwargs = {
             "period": {"error_messages": {"invalid_choice": choices_error_message(PeriodOptions)}},
             "modality": {"error_messages": {"invalid_choice": choices_error_message(ModalityOptions)}},

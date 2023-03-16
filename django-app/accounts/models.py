@@ -83,7 +83,7 @@ class ClassRegistration(models.Model):
     is_active = models.BooleanField(default=True)
 
     def clean(self):
-        if self.teacher is not None and self.teacher.role != 'Student':
+        if self.student is not None and self.student.role != 'Student':
             raise ValidationError({'message': 'A student must be selected.'})
 
     class Meta:

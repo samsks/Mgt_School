@@ -1,12 +1,13 @@
 from .models import Account, ClassRegistration, TestResult, Attendance
 from schools.models import School
+from classes.models import Class
 from accounts import serializers
 from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .permissions import IsAccountOwnerOrAdmin, IsAuthenticatedAndAdmin, IsAccountRoleOwnerOrAdmin, IsAccountHasSchool, IsAccountRoleOwnerOrTeacherForGet, IsAccountRoleOwnerForPost, IsAccountRoleTeacherOrAdmin
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from schools.mixins import SchoolPermissionMixin
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, NotFound
 import ipdb
 
 
@@ -254,6 +255,11 @@ class ClassRegistrationListView(generics.ListAPIView):
     # Ajeitar - Dono do objeto tbm pode
     permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin]
 
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated(), ]
+        return [IsAuthenticated(), IsAccountRoleOwner()]
+
     serializer_class = serializers.ClassRegistrationSerializer
 
     student_url_kwarg = 'student_id'
@@ -264,7 +270,7 @@ class ClassRegistrationListView(generics.ListAPIView):
         if self.request.user.is_superuser:
             return ClassRegistration.objects.filter(student_id=student_id)
         return ClassRegistration.objects.filter(
-            course__school_id=school_id, 
+            cclass__course__school_id=school_id,
             student_id=student_id
         )
 
@@ -274,13 +280,7 @@ class ClassRegistrationCreateView(generics.CreateAPIView):
     # Ajeitar
     permission_classes = [IsAuthenticated, IsAccountRoleOwnerOrAdmin]
 
-    serializer_class = serializers.ClassRegistrationSerializer
-
-    # def get_queryset(self):
-    #     if self.request.user.is_superuser:
-    #         return ClassRegistration.objects.all()
-    #     school_id = self.request.user.school_id
-    #     return ClassRegistration.objects.filter(account__school_id=school_id)
+    serializer_class = serializers.ClassRegistrationCreateSerializer
 
     def perform_create(self, serializer):
         school_id = self.request.user.school_id
@@ -318,7 +318,10 @@ class ClassRegistrationDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         if self.request.user.is_superuser:
             return ClassRegistration.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
-        return ClassRegistration.objects.filter(course__school_id=school_id, pk=self.kwargs[self.lookup_url_kwarg])
+        return ClassRegistration.objects.filter(
+            cclass__course__school_id=school_id,
+            pk=self.kwargs[self.lookup_url_kwarg]
+        )
 
 
 class TestResultListView(generics.ListAPIView):
