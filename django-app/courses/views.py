@@ -12,22 +12,18 @@ from schools.mixins import SchoolPermissionMixin
 
 class CourseView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner]
 
     def get_permissions(self):
         if self.request.method == 'GET':
             return [IsAuthenticated()]
         return [IsAuthenticated(), IsAccountRoleOwner()]
 
-    # Colocar serializer específico para ADM
     serializer_class = CourseSerializer
-
-    # school_url_kwarg = 'school_id'
 
     def get_queryset(self):
         if self.request.user.is_superuser:
             return Course.objects.all()
-        # school_id = self.kwargs['school_id']
+
         school_id = self.request.user.school_id
         return Course.objects.filter(school_id=school_id)
 
@@ -38,7 +34,6 @@ class CourseView(generics.ListCreateAPIView):
 
 class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated, IsAdminOrSchoolOwner,]
 
     def get_permissions(self):
         if self.request.method == 'GET':

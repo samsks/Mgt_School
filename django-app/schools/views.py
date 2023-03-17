@@ -2,7 +2,7 @@ from .models import School
 from .serializers import SchoolSerializer, SchoolOnlyInfoSerializer
 from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from accounts.permissions import IsAccountOwnerOrAdmin, IsAccountRoleOwnerOrAdmin
+from accounts.permissions import IsAccountOwnerOrAdmin, IsAccountRoleOwnerOrAdmin, IsAccountOwnerOrAdmin
 from .permissions import IsAdminOrSchoolOwner
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
@@ -18,6 +18,7 @@ class SchoolView(generics.ListCreateAPIView):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return School.objects.all()
+        # Lógica funcional enquanto só poder ter uma escola cadastrada para cada conta.
         return School.objects.filter(pk=self.request.user.school_id)
 
     def perform_create(self, serializer):
@@ -37,9 +38,11 @@ class SchoolDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_permissions(self):
         if self.request.method == 'GET':
             return [IsAuthenticated()]
-        return [IsAuthenticated(), IsAccountRoleOwnerOrAdmin()]
+        return [IsAuthenticated(), IsAccountRoleOwnerOrAdmin(), ]
 
     def get_serializer_class(self):
+        if self.request.user.is_superuser:
+            return SchoolSerializer
         if self.request.method == 'GET' and self.request.user.role != 'Owner':
             return SchoolOnlyInfoSerializer
         return SchoolSerializer

@@ -38,10 +38,6 @@ class ClassroomView(generics.ListCreateAPIView):
         class_id = self.request.data.get('class_id')
         teacher_id = self.request.data.get('teacher_id')
 
-        # find_school = School.objects.filter(pk=school_id).first()
-        # if not find_school:
-        #     raise NotFound("School not found")
-
         find_class = Class.objects.filter(
             pk=class_id,
             course__school_id=school_id

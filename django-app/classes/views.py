@@ -31,10 +31,8 @@ class ClassView(generics.ListCreateAPIView):
             return Class.objects.all()
         elif self.request.user.role == 'Student':
             return Class.objects.filter(
-                # course__school_id=school_id,
                 class_registration__student__school_id=school_id
             )
-
         return Class.objects.filter(course__school_id=school_id)
 
     def perform_create(self, serializer):
@@ -69,7 +67,14 @@ class ClassDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         if self.request.user.is_superuser:
             return Class.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
-        return Class.objects.filter(course__school_id=school_id, pk=self.kwargs[self.lookup_url_kwarg])
+        elif self.request.user.role == 'Student':
+            return Class.objects.filter(
+                class_registration__student__school_id=school_id
+            )
+        return Class.objects.filter(
+            course__school_id=school_id,
+            pk=self.kwargs[self.lookup_url_kwarg]
+        )
 
     def perform_destroy(self, instance: Class):
         instance.is_active = False

@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Classroom
+from utils.choice_messages import choices_error_message
+from utils.choice_classes import RepeatModeOptions
 
 
 class ClassroomSerializer(serializers.ModelSerializer):
@@ -34,4 +36,28 @@ class ClassroomSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'class_id': {'source': 'cclass_id'},
+            "repeat_mode": {"error_messages": {"invalid_choice": choices_error_message(RepeatModeOptions)}},
         }
+
+
+class ClassroomCreateSerializer(serializers.ModelSerializer):
+    teacher_id = serializers.UUIDField(required=True)
+    class_id = serializers.IntegerField(required=True, source="cclass_id")
+
+    class Meta:
+        model = Classroom
+        fields = [
+            'id',
+            'matter_name',
+            'start_date',
+            'end_date',
+            'repeat_mode',
+            'class_id',
+            'teacher_id',
+        ]
+        extra_kwargs = {
+            "repeat_mode": {"error_messages": {"invalid_choice": choices_error_message(RepeatModeOptions)}},
+        }
+        # extra_kwargs = {
+        #     'class_id': {'source': 'cclass_id'},
+        # }
