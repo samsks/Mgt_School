@@ -2,6 +2,7 @@ import uuid
 from django.db import IntegrityError
 from datetime import datetime
 from accounts.models import Account
+from rest_framework.exceptions import ValidationError
 
 
 def generate_student_code(model, field):
@@ -25,3 +26,13 @@ def generate_unique_uuid(model, field):
         uuid_value = uuid.uuid4()
         if not model.objects.filter(**{field: uuid_value}).exists():
             return uuid_value
+
+
+def validate_uuid(value):
+    """
+    Validate UUID type.
+    """
+    try:
+        uuid_obj = uuid.UUID(str(value))
+    except ValueError:
+        raise ValidationError({'message': f"'{value}' not is a valid UUID."})

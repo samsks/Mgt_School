@@ -27,11 +27,15 @@ class ClassView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         school_id = self.request.user.school_id
+
         if self.request.user.is_superuser:
             return Class.objects.all()
+
         elif self.request.user.role == 'Student':
+            student_id = self.request.user.student_id
             return Class.objects.filter(
-                class_registration__student__school_id=school_id
+                class_registration__student__student_id=student_id,
+                course__school_id=school_id,
             )
         return Class.objects.filter(course__school_id=school_id)
 
@@ -64,17 +68,37 @@ class ClassDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         school_id = self.request.user.school_id
+        class_id = self.kwargs[self.lookup_url_kwarg]
 
         if self.request.user.is_superuser:
-            return Class.objects.filter(pk=self.kwargs[self.lookup_url_kwarg])
+            return Class.objects.filter(pk=class_id)
+
         elif self.request.user.role == 'Student':
+            student_id = self.request.user.student_id
             return Class.objects.filter(
-                class_registration__student__school_id=school_id
+                class_registration__student__student_id=student_id,
+                course__school_id=school_id,
+                pk=class_id
             )
         return Class.objects.filter(
             course__school_id=school_id,
             pk=self.kwargs[self.lookup_url_kwarg]
         )
+
+    def perform_update(self, serializer):
+        school_id = self.request.user.school_id
+        course_id = self.request.data.get('course_id')
+
+        if course_id:
+            find_course = Course.objects.filter(
+                pk=course_id,
+                school_id=school_id
+            )
+            if not find_course:
+                NotFound("Course not found")
+            serializer.save(course_id=course_id)
+
+        serializer.save()
 
     def perform_destroy(self, instance: Class):
         instance.is_active = False

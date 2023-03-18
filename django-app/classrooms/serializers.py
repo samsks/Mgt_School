@@ -1,10 +1,33 @@
 from rest_framework import serializers
 from .models import Classroom
+from rest_framework.exceptions import ValidationError
 from utils.choice_messages import choices_error_message
 from utils.choice_classes import RepeatModeOptions
 
 
 class ClassroomSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Classroom
+        fields = [
+            'id',
+            'matter_name',
+            'start_date',
+            'end_date',
+            'repeat_mode',
+            'is_active',
+            'class_id',
+            'teacher_id',
+        ]
+        extra_kwargs = {
+            'class_id': {'source': 'cclass_id'},
+            "repeat_mode": {"error_messages": {"invalid_choice": choices_error_message(RepeatModeOptions)}},
+        }
+
+
+class ClassroomCreateSerializer(serializers.ModelSerializer):
+    # teacher_id = serializers.UUIDField(allow_null=True)
+    class_id = serializers.IntegerField(required=True, source="cclass_id")
 
     def update(self, instance: Classroom, validated_data: dict) -> Classroom:
 
@@ -31,30 +54,11 @@ class ClassroomSerializer(serializers.ModelSerializer):
             'start_date',
             'end_date',
             'repeat_mode',
+            'is_active',
             'class_id',
             'teacher_id',
         ]
-        extra_kwargs = {
-            'class_id': {'source': 'cclass_id'},
-            "repeat_mode": {"error_messages": {"invalid_choice": choices_error_message(RepeatModeOptions)}},
-        }
-
-
-class ClassroomCreateSerializer(serializers.ModelSerializer):
-    teacher_id = serializers.UUIDField(required=True)
-    class_id = serializers.IntegerField(required=True, source="cclass_id")
-
-    class Meta:
-        model = Classroom
-        fields = [
-            'id',
-            'matter_name',
-            'start_date',
-            'end_date',
-            'repeat_mode',
-            'class_id',
-            'teacher_id',
-        ]
+        # read_only = ['is_active',]
         extra_kwargs = {
             "repeat_mode": {"error_messages": {"invalid_choice": choices_error_message(RepeatModeOptions)}},
         }

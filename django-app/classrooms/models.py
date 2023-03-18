@@ -12,6 +12,7 @@ class Classroom(models.Model):
         choices=RepeatModeOptions.choices,
         default=RepeatModeOptions.WEEKLY,
     )
+    is_active = models.BooleanField(default=True)
 
     def clean(self):
         if self.teacher is not None and self.teacher.role != 'Teacher':
