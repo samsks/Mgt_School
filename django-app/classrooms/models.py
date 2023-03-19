@@ -15,20 +15,21 @@ class Classroom(models.Model):
     is_active = models.BooleanField(default=True)
 
     def clean(self):
-        if self.teacher is not None and self.teacher.role != 'Teacher':
-            raise ValidationError({'message': 'A teacher must be selected.'})
+        if self.teacher is not None and self.teacher.role != "Teacher":
+            raise ValidationError({"message": "A teacher must be selected."})
 
     cclass = models.ForeignKey(
-        'classes.Class',
+        "classes.Class",
         on_delete=models.CASCADE,
-        related_name='classrooms',
+        related_name="classrooms",
+        # db_column='class_id'
     )
 
     teacher = models.ForeignKey(
-        'accounts.Account',
-        to_field='teacher_id',
+        "accounts.Account",
+        to_field="teacher_id",
         on_delete=models.SET_NULL,
-        related_name='classrooms',
-        limit_choices_to={'role': 'Teacher'},
-        null=True
+        related_name="classrooms",
+        limit_choices_to={"role": "Teacher"},
+        null=True,
     )

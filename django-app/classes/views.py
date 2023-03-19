@@ -16,12 +16,12 @@ class ClassView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
-        if self.request.method == 'GET':
+        if self.request.method == "GET":
             return [IsAuthenticated()]
         return [IsAuthenticated(), IsAccountRoleOwner()]
 
     def get_serializer_class(self):
-        if self.request.method == 'POST':
+        if self.request.method == "POST":
             return ClassCreateSerializer
         return ClassSerializer
 
@@ -31,7 +31,7 @@ class ClassView(generics.ListCreateAPIView):
         if self.request.user.is_superuser:
             return Class.objects.all()
 
-        elif self.request.user.role == 'Student':
+        elif self.request.user.role == "Student":
             student_id = self.request.user.student_id
             return Class.objects.filter(
                 class_registration__student__student_id=student_id,
@@ -40,9 +40,8 @@ class ClassView(generics.ListCreateAPIView):
         return Class.objects.filter(course__school_id=school_id)
 
     def perform_create(self, serializer):
-
         school_id = self.request.user.school_id
-        course_id = self.request.data.get('course_id')
+        course_id = self.request.data.get("course_id")
 
         find_course = Course.objects.filter(
             school_id=school_id,
@@ -51,14 +50,16 @@ class ClassView(generics.ListCreateAPIView):
         if not find_course:
             raise NotFound("Course not found")
 
-        serializer.save(course_id=course_id,)
+        serializer.save(
+            course_id=course_id,
+        )
 
 
 class ClassDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
-        if self.request.method == 'GET':
+        if self.request.method == "GET":
             return [IsAuthenticated()]
         return [IsAuthenticated(), IsAccountRoleOwnerOrAdmin()]
 
@@ -73,32 +74,30 @@ class ClassDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.user.is_superuser:
             return Class.objects.filter(pk=class_id)
 
-        elif self.request.user.role == 'Student':
+        elif self.request.user.role == "Student":
             student_id = self.request.user.student_id
             return Class.objects.filter(
                 class_registration__student__student_id=student_id,
                 course__school_id=school_id,
-                pk=class_id
+                pk=class_id,
             )
         return Class.objects.filter(
-            course__school_id=school_id,
-            pk=self.kwargs[self.lookup_url_kwarg]
+            course__school_id=school_id, pk=self.kwargs[self.lookup_url_kwarg]
         )
 
     def perform_update(self, serializer):
         school_id = self.request.user.school_id
-        course_id = self.request.data.get('course_id')
+        course_id = self.request.data.get("course_id")
 
         if course_id:
             find_course = Course.objects.filter(
-                pk=course_id,
-                school_id=school_id
+                pk=course_id, school_id=school_id
             )
             if not find_course:
                 NotFound("Course not found")
             serializer.save(course_id=course_id)
-
-        serializer.save()
+        else:
+            serializer.save()
 
     def perform_destroy(self, instance: Class):
         instance.is_active = False

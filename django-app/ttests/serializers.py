@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Test
 from utils.choice_messages import choices_error_message
 from utils.choice_classes import CategoryTestOptions
+from rest_framework.exceptions import ValidationError
 
 
 class TestSerializer(serializers.ModelSerializer):

@@ -3,6 +3,7 @@ from .models import Classroom
 from rest_framework.exceptions import ValidationError
 from utils.choice_messages import choices_error_message
 from utils.choice_classes import RepeatModeOptions
+import copy
 
 
 class ClassroomSerializer(serializers.ModelSerializer):
@@ -31,7 +32,7 @@ class ClassroomCreateSerializer(serializers.ModelSerializer):
 
     def update(self, instance: Classroom, validated_data: dict) -> Classroom:
 
-        valid_data = validated_data.copy()
+        valid_data = copy.deepcopy(validated_data)
         for attr, value in validated_data.items():
             if getattr(instance, attr) == value:
                 valid_data.pop(attr)

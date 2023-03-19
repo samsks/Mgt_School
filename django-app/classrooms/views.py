@@ -56,6 +56,7 @@ class ClassroomView(generics.ListCreateAPIView):
         school_id = self.request.user.school_id
         class_id = self.request.data.get('class_id')
         teacher_id = self.request.data.get('teacher_id')
+        kwargs = {}
 
         find_class = Class.objects.filter(
             pk=class_id,
@@ -63,6 +64,7 @@ class ClassroomView(generics.ListCreateAPIView):
         ).first()
         if not find_class:
             raise NotFound("Class not found")
+        kwargs['cclass_id'] = class_id
 
         if teacher_id:
             validate_uuid(teacher_id)
@@ -73,9 +75,12 @@ class ClassroomView(generics.ListCreateAPIView):
             ).first()
             if not find_teacher:
                 raise NotFound("Teacher not found")
-            serializer.save(cclass_id=class_id, teacher_id=teacher_id,)
+            kwargs['teacher_id'] = teacher_id
 
-        serializer.save(cclass_id=class_id,)
+        if kwargs:
+            serializer.save(**kwargs)
+        else:
+            serializer.save()
 
 
 class ClassroomDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -132,7 +137,7 @@ class ClassroomDetailView(generics.RetrieveUpdateDestroyAPIView):
             ).first()
             if not find_class:
                 raise NotFound("Class not found")
-            kwargs['class_id'] = class_id
+            kwargs['cclass_id'] = class_id
 
         if teacher_id:
             validate_uuid(teacher_id)
@@ -147,7 +152,8 @@ class ClassroomDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         if kwargs:
             serializer.save(**kwargs)
-        serializer.save()
+        else:
+            serializer.save()
 
     def perform_destroy(self, instance: Classroom):
         instance.is_active = False
