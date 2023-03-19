@@ -1,6 +1,6 @@
 # MGT_School
 
-Este é um projeto com duas partes: uma aplicação Django e uma aplicação React.
+Este é um projeto com duas partes: uma aplicação Backend em Django e uma aplicação Frontend em React.
 
 ## Django App
 
