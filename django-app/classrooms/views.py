@@ -99,6 +99,7 @@ class ClassroomDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         if self.request.user.is_superuser:
             return Classroom.objects.filter(pk=classroom_id)
+
         elif self.request.user.role == 'Teacher':
             teacher_id = self.request.user.teacher_id
             return Classroom.objects.filter(

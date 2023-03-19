@@ -9,6 +9,7 @@ class Test(models.Model):
     )
     test_date = models.DateTimeField()
     max_score = models.DecimalField(max_digits=5, decimal_places=2, default=10)
+    is_active = models.BooleanField(default=False)
 
     classroom = models.ForeignKey(
         'classrooms.Classroom',

@@ -20,7 +20,6 @@ class TestSerializer(serializers.ModelSerializer):
             setattr(instance, key, value)
 
         instance.save()
-
         return instance
 
     class Meta:
@@ -30,6 +29,25 @@ class TestSerializer(serializers.ModelSerializer):
             'category',
             'test_date',
             'max_score',
+            'is_active',
+            'classroom_id',
+        ]
+        extra_kwargs = {
+            "category": {"error_messages": {"invalid_choice": choices_error_message(CategoryTestOptions)}},
+        }
+
+
+class TestCreateSerializer(serializers.ModelSerializer):
+    classroom_id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Test
+        fields = [
+            'id',
+            'category',
+            'test_date',
+            'max_score',
+            'is_active',
             'classroom_id',
         ]
         extra_kwargs = {
