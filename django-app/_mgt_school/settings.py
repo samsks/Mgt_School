@@ -27,12 +27,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
+SECRET_KEY = os.getenv("SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", False)
 
-ALLOWED_HOSTS = ["mgtschoolsamsks-production.up.railway.app", "0.0.0.0"]
+ALLOWED_HOSTS = [
+    "mgtschoolsamsks-production.up.railway.app",
+    "0.0.0.0",
+    # "localhost",
+]
 
 
 # Application definition
@@ -103,11 +107,11 @@ WSGI_APPLICATION = "_mgt_school.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv('POSTGRES_DB_NAME'),
-        "USER": os.getenv('POSTGRES_USERNAME'),
-        "PASSWORD": os.getenv('POSTGRES_PASSWORD'),
-        "HOST": os.getenv('POSTGRES_DB_HOST'),
-        "PORT": os.getenv('POSTGRES_PORT'),
+        "NAME": os.getenv("POSTGRES_DB_NAME"),
+        "USER": os.getenv("POSTGRES_USERNAME"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_DB_HOST"),
+        "PORT": os.getenv("POSTGRES_PORT"),
     },
 }
 
@@ -119,7 +123,9 @@ if DATABASE_URL:
 
 if not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    STATICFILES_STORAGE = (
+        "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    )
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -176,8 +182,8 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'MGT School',
-    'DESCRIPTION': 'Gerenciador escolar',
-    'VERSION': '0.3.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "MGT School",
+    "DESCRIPTION": "Gerenciador escolar",
+    "VERSION": "0.3.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
