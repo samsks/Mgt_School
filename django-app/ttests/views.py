@@ -120,6 +120,8 @@ class TestDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         serializer.save()
 
+    # Teste Git
+
     # def perform_destroy(self, instance: Test):
     #     instance.is_active = False
     #     instance.save()
